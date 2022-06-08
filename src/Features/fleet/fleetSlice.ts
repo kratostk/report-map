@@ -1,47 +1,54 @@
-import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
-const fetchFleets = createAsyncThunk(
-    "fleet/fetchFleets",
-    async () => {
-        const response = await fetch("https://jsonplaceholder.typicode.com/posts")
-        const resuot = await response.json()
-        console.log(resuot)
-    }
-)
+interface IMockup {
+  userId: number;
+  id: number;
+  title: string;
+  completed: boolean;
+}
+
+export const fetchFleets = createAsyncThunk<IMockup>(
+  "fleet/fetchFleets",
+  async () => {
+    const response = await fetch(
+      "https://jsonplaceholder.typicode.com/todos/1"
+    );
+    return (await response.json()) as IMockup;
+  }
+);
+
 interface IFleet {
-    fleetID: number;
-    fleetDecs: string;
+  fleetID: number;
+  fleetDecs: string;
 }
 
 interface IFleets {
-    loading: boolean;
-    fleet: Array<IFleet>
-    error: string | null
+  loading: boolean;
+  fleets: Array<IFleet>;
+  test: IMockup | null;
+  error: string | null;
 }
 
 const initialState: IFleets = {
-    loading: false,
-    fleet: [],
-    error: null
+  loading: false,
+  fleets: [],
+  test: null,
+  error: null,
 };
 
 const fleetSlice = createSlice({
-    name: "fleet",
-    initialState,
-    reducers: {
-        // added: (state: IFleets, action: PayloadAction<IFleets>) => {
-        //     state = action.payload
-        // },
-    },
-    extraReducers: (builder) => {
-        builder.addCase(fetchFleets.pending, (state, action) => {
-            state.loading = true
-        })
-        builder.addCase(fetchFleets.fulfilled, (state: IFleets, action) => {
-            state.fleet = [...state.fleet,action.payload]
-            state.loading = true
-        })
-    }
+  name: "fleet",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(fetchFleets.pending, (state, action) => {
+      state.loading = true;
+    });
+    builder.addCase(fetchFleets.fulfilled, (state, action) => {
+      state.test = action.payload;
+      state.loading = false;
+    });
+  },
 });
 
 export default fleetSlice.reducer;
