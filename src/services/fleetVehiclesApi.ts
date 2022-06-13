@@ -11,7 +11,7 @@ export interface IVehicle {
   local_timestamp: string;
   lon: Array<number>;
   name: string;
-  namet: string;
+  namt: string;
   no_of_satellite: number;
   ref_idx: number;
   rx_local_timestamp: string;
