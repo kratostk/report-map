@@ -10,9 +10,7 @@ interface IMockup {
 export const fetchFleets = createAsyncThunk<IMockup>(
   "fleet/fetchFleets",
   async () => {
-    const response = await fetch(
-      "https://jsonplaceholder.typicode.com/todos/1"
-    );
+    const response = await fetch("api/fleet");
     return (await response.json()) as IMockup;
   }
 );
