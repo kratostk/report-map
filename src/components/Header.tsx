@@ -10,7 +10,7 @@ interface Props {
 function Header({ handleselectFleet, fleetData }: Props) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   return (
-    <header className="flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
+    <header className="border-b border-slate-900/10 flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
       <img className="flex-start" src={logo} width="120" />
 
       {/* Hamburger toggle on sm screen */}

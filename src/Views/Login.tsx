@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import logo from "../Image/logo.png";
-
-type Login = {
-  username: string | null;
-  password: string | null;
-};
+import { useDispatch } from "react-redux";
+import { useLoggedinMutation, Login as ILogin } from "../services/userApi";
 
 function Login() {
-  const [credentials, setCredentials] = useState<Login>({
+  const [credentials, setCredentials] = useState<ILogin>({
     username: null,
     password: null,
   });
+
+  const [loggedin, result] = useLoggedinMutation();
+
+  console.log(result);
 
   const handleType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCredentials((prevState) => ({
@@ -21,7 +22,7 @@ function Login() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    console.log(credentials);
+    loggedin(credentials);
   };
 
   return (
@@ -64,7 +65,7 @@ function Login() {
                   placeholder="Username"
                 />
                 <button
-                  type="button"
+                  type="submit"
                   className="transition duration-200 bg-[#2F847C] hover:bg-[#054B4A] focus:bg-[#054B4A] focus:shadow-sm focus:ring-4 focus:ring-[#2F847C] focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
                 >
                   <span className="inline-block mr-2">Login</span>

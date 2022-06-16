@@ -1,18 +1,38 @@
 import { configureStore } from "@reduxjs/toolkit";
-import orderReducer from "../Features/order/orderSlice";
-import fleetReucer from "../Features/fleet/fleetSlice";
 import { fleetsApi } from "../services/fleetApi";
 import { vehiclesApi } from "../services/vehiclesApi";
+import { userApi } from "../services/userApi";
+import {
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const persistConfig = {
+  key: "root",
+  version: 1,
+  storage,
+};
+const persistedReducer = persistReducer(persistConfig, userApi.reducer);
 
 const store = configureStore({
   reducer: {
-    order: orderReducer,
-    fleet: fleetReucer,
     [fleetsApi.reducerPath]: fleetsApi.reducer,
     [vehiclesApi.reducerPath]: vehiclesApi.reducer,
+    [userApi.reducerPath]: userApi.reducer,
+    tokens: persistedReducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(fleetsApi.middleware, vehiclesApi.middleware),
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(fleetsApi.middleware, vehiclesApi.middleware, userApi.middleware),
 });
 
 export type AppDispatch = typeof store.dispatch;

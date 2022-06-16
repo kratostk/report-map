@@ -3,9 +3,16 @@ import { useFleetsQuery } from "../services/fleetApi";
 import { useGetVehiclesQuery } from "../services/vehiclesApi";
 import Header from "../components/Header";
 import { skipToken } from "@reduxjs/toolkit/query";
+import { useSelector } from "react-redux";
+import { RootState } from "../app/store";
+import { useLoggedinMutation } from "../services/userApi";
 
 function Home(): JSX.Element {
   const [selectFleet, setSelectFleet] = useState<string>("0");
+
+  const [loggedin, result] = useLoggedinMutation();
+
+  // console.log("token", loggedin());
 
   /**
    * TODO: use login credential
@@ -73,7 +80,10 @@ function Home(): JSX.Element {
       <div className="mt-24 grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
         {vehicleData
           ? vehicleData.map((item, i) => (
-              <div
+              <a
+                href={`https://maps.google.com/maps?q=${item.lat},${item.lon}`}
+                target="_blank"
+                rel="noopener"
                 key={i}
                 className="bg-white rounded-3xl cursor-pointer hover:border-sky-500 border shadow-xl p-8 w-full"
               >
@@ -113,7 +123,7 @@ function Home(): JSX.Element {
                     $ 1,936.00
                   </h1>
                 </div>
-              </div>
+              </a>
             ))
           : null}
       </div>
