@@ -1,25 +1,20 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export interface IVehicle {
-  analog_level: number;
-  course: number;
+  Status: string;
+  Temp1: string;
+  Temp2: string;
   distance: number;
+  evt_id: number;
   fleet_id: number;
-  idx: number;
-  in_out_status: number;
-  lat: Array<number>;
+  lat: number;
   local_timestamp: string;
-  lon: Array<number>;
+  lon: number;
   name: string;
   namt: string;
-  no_of_satellite: number;
-  ref_idx: number;
-  rx_local_timestamp: string;
+  registration: string;
   speed: number;
-  timestamp: Date;
-  type_of_fix: number;
-  type_of_msg: number;
-  veh_id: Array<number>;
+  veh_id: number;
 }
 
 type IVehicles = IVehicle[];

@@ -1,12 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface IFleet {
-  user_id: number;
-  name: string;
-  address: string;
-  tel_no: string;
-  fleet_desc: string;
+export interface IFleet {
   fleet_id: string;
+  fleet_desc: string;
 }
 
 type IFleets = IFleet[];
@@ -22,7 +18,7 @@ export const fleetApi = createApi({
   }),
   endpoints: (builder) => ({
     fleets: builder.query<IFleets, void>({
-      query: () => "/api/fleet",
+      query: () => "/api/fleets",
     }),
   }),
 });
