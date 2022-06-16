@@ -10,13 +10,8 @@ interface Props {
 function Header({ handleselectFleet, fleetData }: Props) {
   const [showMenu, setShowMenu] = useState<boolean>(false);
   return (
-<<<<<<< HEAD
-    <header className="flex items-center z-10 top-0 fixed justify-between w-full bg-white border-b lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
-      <img className="flex-start" src={logo} width="150" />
-=======
     <header className="flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
       <img className="flex-start" src={logo} width="120" />
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
 
       {/* Hamburger toggle on sm screen */}
       <div
@@ -41,17 +36,10 @@ function Header({ handleselectFleet, fleetData }: Props) {
 
       {/* menu on on toggle */}
       {showMenu ? (
-<<<<<<< HEAD
-        <div className="absolute py-5 top-full md:hidden mt-1 bg-transparent ring-slate-900/5 text-sm leading-6 font-semibold text-slate-700 dark:text-slate-300 dark:highlight-white/5">
-          <div className="flex relative col-start-1 col-end-3">
-            <svg
-              className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none "
-=======
         <div className="absolute top-full right-4 md:hidden bg-transparent ring-slate-900/5 text-sm leading-6 font-semibold text-slate-700 dark:text-slate-300 dark:highlight-white/5">
           <div className="flex relative col-start-1 col-end-3">
             <svg
               className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none z-10 "
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 412 232"
             >
@@ -63,11 +51,7 @@ function Header({ handleselectFleet, fleetData }: Props) {
             </svg>
             <select
               onClick={handleselectFleet}
-<<<<<<< HEAD
-              className="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
-=======
               className="absolute top-0 right-0 border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none"
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
             >
               <option value="0">Please select Fleet</option>
               {fleetData
