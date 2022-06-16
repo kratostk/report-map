@@ -1,11 +1,5 @@
-<<<<<<< HEAD
 import React, { useState } from "react";
-import Loginlogo from "../Image/LoginLogo.png";
-import bgLogin from "../Image/bg1.png";
-=======
-import React from "react";
 import logo from "../Image/logo.png";
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
 
 type Login = {
   username: string | null;
@@ -38,11 +32,7 @@ function Login() {
             <div className="p-6 sm:p-16">
               <div className="space-y-4">
                 <img
-<<<<<<< HEAD
-                  src={Loginlogo}
-=======
                   src={logo}
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
                   loading="lazy"
                   className="w-20"
                   alt="tailus logo"
@@ -74,13 +64,8 @@ function Login() {
                   placeholder="Username"
                 />
                 <button
-<<<<<<< HEAD
-                  type="submit"
-                  className="transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
-=======
                   type="button"
                   className="transition duration-200 bg-[#2F847C] hover:bg-[#054B4A] focus:bg-[#054B4A] focus:shadow-sm focus:ring-4 focus:ring-[#2F847C] focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
->>>>>>> af1cc2c931555e2b0cf2c0df636ea4c0c4b80fd8
                 >
                   <span className="inline-block mr-2">Login</span>
                   <svg

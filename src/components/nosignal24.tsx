@@ -1,5 +1,5 @@
 import React from "react";
-import { IVehicle } from "../services/fleetVehiclesApi";
+import { IVehicle } from "../services/vehiclesApi";
 import Nosignal from "../Image/nosignal.png";
 
 interface Props {

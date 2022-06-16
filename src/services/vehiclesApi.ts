@@ -13,6 +13,8 @@ export interface IVehicle {
   distance: number;
   evt_id: string;
   Status: string;
+  Temp1: string;
+  Temp2: string;
 }
 
 export const vehiclesApi = createApi({
