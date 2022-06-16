@@ -21,17 +21,10 @@ export const vehiclesApi = createApi({
     baseUrl: "http://localhost:5000/",
   }),
   endpoints: (builder) => ({
-    vehicles: builder.mutation<IVehicle[], string>({
-      query: (fleetId) => {
-        console.log(fleetId);
-        return {
-          url: "/api/fleet/vehicles",
-          method: "POST",
-          body: { fleetId },
-        };
-      },
+    getVehicles: builder.query<IVehicle[], string | undefined>({
+      query: (fleetId) => `/api/fleet/vehicles/${fleetId}`,
     }),
   }),
 });
 
-export const { useVehiclesMutation } = vehiclesApi;
+export const { useGetVehiclesQuery } = vehiclesApi;

@@ -1,35 +1,45 @@
 import React, { useState, useEffect } from "react";
-import logo from "../Image/logo.png";
 import { useFleetsQuery } from "../services/fleetApi";
-import { useVehiclesMutation } from "../services/vehiclesApi";
-import Card from "../components/Card";
+import { useGetVehiclesQuery } from "../services/vehiclesApi";
 import Header from "../components/Header";
+import { skipToken } from "@reduxjs/toolkit/query";
 
 function Home(): JSX.Element {
-  const [selectFleet, setSelectFleet] = useState<string>();
-  const { data: fleetData, error, isLoading, isSuccess } = useFleetsQuery();
-  const [fleetVehicles, result] = useVehiclesMutation();
+  const [selectFleet, setSelectFleet] = useState<string>("0");
+
+  /**
+   * TODO: use login credential
+   */
+  const {
+    data: fleetData,
+    error: isGetFleetError,
+    isLoading: isFleetLoading,
+    isSuccess: isGetFleetSuccess,
+  } = useFleetsQuery("Toe");
+
+  /**
+   * * Fetch vehicles of particular fleet.
+   */
+  const {
+    data: vehicleData,
+    error: isGetVehicleErr,
+    isLoading: isGetVehicleLoading,
+    isSuccess: isGetVehicleSuccess,
+  } = useGetVehiclesQuery(
+    selectFleet === "0" || !selectFleet ? skipToken : selectFleet
+  );
 
   const handleselectFleet: React.MouseEventHandler<HTMLSelectElement> = (e) => {
     const target = e.target as HTMLInputElement;
     setSelectFleet(target.value);
   };
 
-  useEffect(() => {
-    // onMounted retrieve fleets on login role
-    if (selectFleet === "0" || selectFleet === undefined) {
-      return;
-    } else {
-      fleetVehicles(selectFleet!);
-    }
-  }, [selectFleet]);
-
   return (
     <div className="bg-white mx-auto">
       <Header handleselectFleet={handleselectFleet} fleetData={fleetData} />
 
       {/* Render placeholder on Vehicles Null, Error, Loading */}
-      {!result.isSuccess ? (
+      {!vehicleData?.length || isGetVehicleLoading ? (
         <div className="min-h-screen h-full overflow-hidden flex justify-center items-center">
           <div className="relative overflow-hidden bg-white mb-12">
             <div className="relative overflow-hidden px-6">
@@ -40,13 +50,17 @@ function Home(): JSX.Element {
               />
             </div>
             <div className="pt-6 text-center">
-              {result.isLoading ? (
+              {isGetVehicleLoading ? (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Loading...
                 </p>
-              ) : (
+              ) : vehicleData === undefined ? (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Please select fleet
+                </p>
+              ) : (
+                <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
+                  No Data :(
                 </p>
               )}
               <div className="mt-2 mb-5 space-x-2"></div>
@@ -57,8 +71,8 @@ function Home(): JSX.Element {
       {/* Render placeholder on Vehicles Null, Error, Loading */}
 
       <div className="mt-24 grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
-        {result.data
-          ? result.data.map((item, i) => (
+        {vehicleData
+          ? vehicleData.map((item, i) => (
               <div
                 key={i}
                 className="bg-white rounded-3xl cursor-pointer hover:border-sky-500 border shadow-xl p-8 w-full"

@@ -11,8 +11,8 @@ export const fleetsApi = createApi({
     baseUrl: "http://localhost:5000/",
   }),
   endpoints: (builder) => ({
-    fleets: builder.query<IFleet[], void>({
-      query: () => "/api/fleets",
+    fleets: builder.query<IFleet[], string>({
+      query: (loginName) => `/api/usrfleets/${loginName}`,
     }),
   }),
 });
