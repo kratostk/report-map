@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import logo from "../Image/logo.png";
-import { useDispatch } from "react-redux";
-import { useLoggedinMutation, Login as ILogin } from "../services/userApi";
+
+interface ILogin {
+  username: string | null;
+  password: string | null;
+}
 
 function Login() {
   const [credentials, setCredentials] = useState<ILogin>({
     username: null,
     password: null,
   });
-
-  const [loggedin, result] = useLoggedinMutation();
-
-  console.log(result);
 
   const handleType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCredentials((prevState) => ({
@@ -22,7 +21,6 @@ function Login() {
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
-    loggedin(credentials);
   };
 
   return (

@@ -1,40 +1,55 @@
 import React, { useState, useEffect } from "react";
-import { useFleetsQuery } from "../services/fleetApi";
-import { useGetVehiclesQuery } from "../services/vehiclesApi";
 import Header from "../components/Header";
-import { skipToken } from "@reduxjs/toolkit/query";
-import { useSelector } from "react-redux";
-import { RootState } from "../app/store";
-import { useLoggedinMutation } from "../services/userApi";
+import useSWR, { Key, Fetcher } from "swr";
+import axios from "axios";
+
+export interface IFleet {
+  fleet_id: string;
+  fleet_desc: string;
+}
+export interface IVehicle {
+  fleet_id: number;
+  veh_id: number;
+  registration: string;
+  lat: number;
+  lon: number;
+  local_timestamp: Date;
+  speed: number;
+  name: string;
+  namt: string;
+  distance: number;
+  evt_id: string;
+  Status: string;
+  Temp1: string;
+  Temp2: string;
+}
+
+// this gotta be outside, drove me crazy lol
+const fetcher = async (url: string) => {
+  try {
+    const r = await axios.get(url);
+    return r.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function Home(): JSX.Element {
   const [selectFleet, setSelectFleet] = useState<string>("0");
 
-  const [loggedin, result] = useLoggedinMutation();
+  const loginName = "Toe";
 
-  // console.log("token", loggedin());
-
-  /**
-   * TODO: use login credential
-   */
-  const {
-    data: fleetData,
-    error: isGetFleetError,
-    isLoading: isFleetLoading,
-    isSuccess: isGetFleetSuccess,
-  } = useFleetsQuery("Toe");
-
-  /**
-   * * Fetch vehicles of particular fleet.
-   */
-  const {
-    data: vehicleData,
-    error: isGetVehicleErr,
-    isLoading: isGetVehicleLoading,
-    isSuccess: isGetVehicleSuccess,
-  } = useGetVehiclesQuery(
-    selectFleet === "0" || !selectFleet ? skipToken : selectFleet
+  const { data, error } = useSWR(
+    `http://localhost:5000/api/usrfleets/${loginName}`,
+    fetcher
   );
+
+  const { data: vehicleData, error: vehicleError } = useSWR(
+    `http://localhost:5000/api/fleet/vehicles/${selectFleet}`,
+    fetcher
+  );
+
+  console.log(vehicleData);
 
   const handleselectFleet: React.MouseEventHandler<HTMLSelectElement> = (e) => {
     const target = e.target as HTMLInputElement;
@@ -43,10 +58,10 @@ function Home(): JSX.Element {
 
   return (
     <div className="bg-white mx-auto">
-      <Header handleselectFleet={handleselectFleet} fleetData={fleetData} />
+      <Header handleselectFleet={handleselectFleet} fleetData={data} />
 
       {/* Render placeholder on Vehicles Null, Error, Loading */}
-      {!vehicleData?.length || isGetVehicleLoading ? (
+      {vehicleData === undefined || !vehicleData.length ? (
         <div className="min-h-screen h-full overflow-hidden flex justify-center items-center">
           <div className="relative overflow-hidden bg-white mb-12">
             <div className="relative overflow-hidden px-6">
@@ -57,20 +72,15 @@ function Home(): JSX.Element {
               />
             </div>
             <div className="pt-6 text-center">
-              {isGetVehicleLoading ? (
+              {!vehicleData ? (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Loading...
                 </p>
-              ) : vehicleData === undefined ? (
+              ) : (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Please select fleet
                 </p>
-              ) : (
-                <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
-                  No Data :(
-                </p>
               )}
-              <div className="mt-2 mb-5 space-x-2"></div>
             </div>
           </div>
         </div>
@@ -79,7 +89,7 @@ function Home(): JSX.Element {
 
       <div className="mt-24 grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
         {vehicleData
-          ? vehicleData.map((item, i) => (
+          ? vehicleData.map((item: IVehicle, i: number) => (
               <a
                 href={`https://maps.google.com/maps?q=${item.lat},${item.lon}`}
                 target="_blank"
