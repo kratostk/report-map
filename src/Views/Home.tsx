@@ -1,32 +1,65 @@
-import React, { useState, useEffect } from "react";
-import { useFleetsQuery } from "../services/fleetApi";
-import { useGetVehiclesQuery } from "../services/vehiclesApi";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
-import { skipToken } from "@reduxjs/toolkit/query";
+import useSWR from "swr";
+import axios, { AxiosRequestConfig } from "axios";
+import { StoreContext } from "../store";
+
+export interface IFleet {
+  fleet_id: string;
+  fleet_desc: string;
+}
+export interface IVehicle {
+  fleet_id: number;
+  veh_id: number;
+  registration: string;
+  lat: number;
+  lon: number;
+  local_timestamp: Date;
+  speed: number;
+  name: string;
+  namt: string;
+  distance: number;
+  evt_id: string;
+  Status: string;
+  Temp1: string;
+  Temp2: string;
+}
+
+const fetcher = async (url: string, config: AxiosRequestConfig) => {
+  try {
+    const r = await axios.get(url, config);
+    return r.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function Home(): JSX.Element {
+  const { user } = useContext(StoreContext);
+
   const [selectFleet, setSelectFleet] = useState<string>("0");
 
-  /**
-   * TODO: use login credential
-   */
-  const {
-    data: fleetData,
-    error: isGetFleetError,
-    isLoading: isFleetLoading,
-    isSuccess: isGetFleetSuccess,
-  } = useFleetsQuery("Toe");
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${user?.token}`,
+    },
+  };
 
   /**
-   * * Fetch vehicles of particular fleet.
+   * Retrive Fleets
    */
-  const {
-    data: vehicleData,
-    error: isGetVehicleErr,
-    isLoading: isGetVehicleLoading,
-    isSuccess: isGetVehicleSuccess,
-  } = useGetVehiclesQuery(
-    selectFleet === "0" || !selectFleet ? skipToken : selectFleet
+  const { data, error } = useSWR(
+    [`/api/fleets/${user!.username}`, config],
+    fetcher
+  );
+
+  /**
+   * Retrive Vehicles
+   */
+  const { data: vehicleData, error: vehicleError } = useSWR(
+    [`/api/fleet/vehicles/${selectFleet}`, config],
+    fetcher
   );
 
   const handleselectFleet: React.MouseEventHandler<HTMLSelectElement> = (e) => {
@@ -36,10 +69,10 @@ function Home(): JSX.Element {
 
   return (
     <div className="bg-white mx-auto">
-      <Header handleselectFleet={handleselectFleet} fleetData={fleetData} />
+      <Header handleselectFleet={handleselectFleet} fleetData={data} />
 
       {/* Render placeholder on Vehicles Null, Error, Loading */}
-      {!vehicleData?.length || isGetVehicleLoading ? (
+      {vehicleData === undefined || !vehicleData.length ? (
         <div className="min-h-screen h-full overflow-hidden flex justify-center items-center">
           <div className="relative overflow-hidden bg-white mb-12">
             <div className="relative overflow-hidden px-6">
@@ -50,20 +83,15 @@ function Home(): JSX.Element {
               />
             </div>
             <div className="pt-6 text-center">
-              {isGetVehicleLoading ? (
+              {!vehicleData ? (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Loading...
                 </p>
-              ) : vehicleData === undefined ? (
+              ) : (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
                   Please select fleet
                 </p>
-              ) : (
-                <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
-                  No Data :(
-                </p>
               )}
-              <div className="mt-2 mb-5 space-x-2"></div>
             </div>
           </div>
         </div>
@@ -72,8 +100,11 @@ function Home(): JSX.Element {
 
       <div className="mt-24 grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
         {vehicleData
-          ? vehicleData.map((item, i) => (
-              <div
+          ? vehicleData.map((item: IVehicle, i: number) => (
+              <a
+                href={`https://maps.google.com/maps?q=${item.lat},${item.lon}`}
+                target="_blank"
+                rel="noopener"
                 key={i}
                 className="bg-white rounded-3xl cursor-pointer hover:border-sky-500 border shadow-xl p-8 w-full"
               >
@@ -113,7 +144,7 @@ function Home(): JSX.Element {
                     $ 1,936.00
                   </h1>
                 </div>
-              </div>
+              </a>
             ))
           : null}
       </div>

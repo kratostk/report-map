@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
+import { login } from "../services/auth";
+import { useNavigate, Navigate } from "react-router-dom";
+import { StoreContext, IUser } from "../store";
 
-type Login = {
+export interface ILogin {
   username: string | null;
   password: string | null;
-};
+}
 
 function Login() {
-  const [credentials, setCredentials] = useState<Login>({
+  const { user, loggedIn } = useContext(StoreContext);
+  const navigate = useNavigate();
+  const [credentials, setCredentials] = useState<ILogin>({
     username: null,
     password: null,
   });
@@ -19,9 +24,17 @@ function Login() {
     }));
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
-    console.log(credentials);
+
+    try {
+      const authUser = await login(credentials);
+      // set global state
+      loggedIn(authUser);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -64,7 +77,7 @@ function Login() {
                   placeholder="Username"
                 />
                 <button
-                  type="button"
+                  type="submit"
                   className="transition duration-200 bg-[#2F847C] hover:bg-[#054B4A] focus:bg-[#054B4A] focus:shadow-sm focus:ring-4 focus:ring-[#2F847C] focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
                 >
                   <span className="inline-block mr-2">Login</span>
