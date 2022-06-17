@@ -7,6 +7,7 @@ interface ILogin {
 interface IUser {
   username: string;
   email: string;
+  token: string;
 }
 interface IToken {
   accessToken: string;
@@ -30,7 +31,7 @@ function login(credentials: ILogin): Promise<IUser> {
         // persist token in localStorage
         const { token, data } = response.data;
         localStorage.setItem("token", token.accessToken);
-        resolve(data);
+        resolve({ ...data, token: token.accessToken });
       })
       .catch((error) => {
         reject(error);
@@ -38,4 +39,28 @@ function login(credentials: ILogin): Promise<IUser> {
   });
 }
 
-export { login };
+/**
+ *
+ * @param {string | null} token
+ */
+function isAuth(token: string | null): Promise<IUser> {
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`/login/auth`, config)
+      .then((response) => {
+        resolve(response.data);
+      })
+      .catch((error) => {
+        reject(error);
+      });
+  });
+}
+
+export { login, isAuth };

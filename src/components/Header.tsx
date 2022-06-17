@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
 import { IFleet } from "../views/Home";
+import { StoreContext } from "../store";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   handleselectFleet: React.MouseEventHandler<HTMLSelectElement>;
@@ -8,7 +10,14 @@ interface Props {
 }
 
 function Header({ handleselectFleet, fleetData }: Props) {
+  const { loggedOut } = useContext(StoreContext);
   const [showMenu, setShowMenu] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    loggedOut();
+    navigate("/login");
+  };
   return (
     <header className="border-b border-slate-900/10 flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
       <img className="flex-start" src={logo} width="120" />
@@ -94,7 +103,12 @@ function Header({ handleselectFleet, fleetData }: Props) {
             : null}
         </select>
       </div>
+
       {/* Search bar */}
+
+      <button onClick={handleLogout} className="bg-teal-800">
+        Logout
+      </button>
     </header>
   );
 }

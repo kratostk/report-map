@@ -1,9 +1,9 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./views/Login";
 import Home from "./views/Home";
+import RouteGuard from "./views/RouteGuard";
 
 function App() {
   return (
@@ -11,7 +11,9 @@ function App() {
       <div>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<RouteGuard />}>
+            <Route path="/" element={<Home />} />
+          </Route>
         </Routes>
       </div>
     </Router>

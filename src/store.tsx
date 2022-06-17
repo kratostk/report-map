@@ -3,6 +3,7 @@ import React, { useState, ReactNode } from "react";
 export interface IUser {
   username: string;
   email: string;
+  token: string;
 }
 interface StoreContextType {
   user: IUser | null;
@@ -26,7 +27,10 @@ interface Props {
 const StoreProvider = ({ children, ...props }: Props) => {
   const [user, setUser] = useState<IUser | null>(null);
   const loggedIn = (u: IUser) => setUser(u);
-  const loggedOut = () => setUser(null);
+  const loggedOut = () => {
+    setUser(null);
+    localStorage.removeItem("token");
+  };
 
   return (
     <StoreContext.Provider

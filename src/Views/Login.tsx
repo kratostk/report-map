@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
 import { login } from "../services/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import { StoreContext, IUser } from "../store";
 
 export interface ILogin {
@@ -17,8 +17,6 @@ function Login() {
     password: null,
   });
 
-  console.log("user", user);
-
   const handleType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCredentials((prevState) => ({
       ...prevState,
@@ -31,9 +29,8 @@ function Login() {
 
     try {
       const authUser = await login(credentials);
+      // set global state
       loggedIn(authUser);
-      console.log("Auth user", authUser);
-      console.log("user", user);
       navigate("/");
     } catch (err) {
       console.log(err);

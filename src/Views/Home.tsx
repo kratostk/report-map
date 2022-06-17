@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
-import useSWR, { Key, Fetcher } from "swr";
-import axios from "axios";
+import useSWR from "swr";
+import axios, { AxiosRequestConfig } from "axios";
 import { StoreContext } from "../store";
 
 export interface IFleet {
@@ -25,10 +25,9 @@ export interface IVehicle {
   Temp2: string;
 }
 
-// this gotta be outside, drove me crazy lol
-const fetcher = async (url: string) => {
+const fetcher = async (url: string, config: AxiosRequestConfig) => {
   try {
-    const r = await axios.get(url);
+    const r = await axios.get(url, config);
     return r.data;
   } catch (error) {
     console.log(error);
@@ -37,20 +36,31 @@ const fetcher = async (url: string) => {
 
 function Home(): JSX.Element {
   const { user } = useContext(StoreContext);
+
   const [selectFleet, setSelectFleet] = useState<string>("0");
 
-  const loginName = "Toe";
+  const config = {
+    headers: {
+      "Content-type": "application/json",
+      Authorization: `Bearer ${user?.token}`,
+    },
+  };
 
-  console.log("home auth user", user);
-
-  const { data, error } = useSWR(`/api/usrfleets/${loginName}`, fetcher);
-
-  const { data: vehicleData, error: vehicleError } = useSWR(
-    `/api/fleet/vehicles/${selectFleet}`,
+  /**
+   * Retrive Fleets
+   */
+  const { data, error } = useSWR(
+    [`/api/fleets/${user!.username}`, config],
     fetcher
   );
 
-  console.log(vehicleData);
+  /**
+   * Retrive Vehicles
+   */
+  const { data: vehicleData, error: vehicleError } = useSWR(
+    [`/api/fleet/vehicles/${selectFleet}`, config],
+    fetcher
+  );
 
   const handleselectFleet: React.MouseEventHandler<HTMLSelectElement> = (e) => {
     const target = e.target as HTMLInputElement;
