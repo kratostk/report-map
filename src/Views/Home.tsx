@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Header from "../components/Header";
 import useSWR, { Key, Fetcher } from "swr";
 import axios from "axios";
+import { StoreContext } from "../store";
 
 export interface IFleet {
   fleet_id: string;
@@ -35,17 +36,17 @@ const fetcher = async (url: string) => {
 };
 
 function Home(): JSX.Element {
+  const { user } = useContext(StoreContext);
   const [selectFleet, setSelectFleet] = useState<string>("0");
 
   const loginName = "Toe";
 
-  const { data, error } = useSWR(
-    `http://localhost:5000/api/usrfleets/${loginName}`,
-    fetcher
-  );
+  console.log("home auth user", user);
+
+  const { data, error } = useSWR(`/api/usrfleets/${loginName}`, fetcher);
 
   const { data: vehicleData, error: vehicleError } = useSWR(
-    `http://localhost:5000/api/fleet/vehicles/${selectFleet}`,
+    `/api/fleet/vehicles/${selectFleet}`,
     fetcher
   );
 

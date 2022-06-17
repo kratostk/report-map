@@ -1,16 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
+import { login } from "../services/auth";
+import { useNavigate } from "react-router-dom";
+import { StoreContext, IUser } from "../store";
 
-interface ILogin {
+export interface ILogin {
   username: string | null;
   password: string | null;
 }
 
 function Login() {
+  const { user, loggedIn } = useContext(StoreContext);
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState<ILogin>({
     username: null,
     password: null,
   });
+
+  console.log("user", user);
 
   const handleType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCredentials((prevState) => ({
@@ -19,8 +26,18 @@ function Login() {
     }));
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = (e) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+
+    try {
+      const authUser = await login(credentials);
+      loggedIn(authUser);
+      console.log("Auth user", authUser);
+      console.log("user", user);
+      navigate("/");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from "../Image/logo.png";
-import { IFleet } from "../Views/Home";
+import { IFleet } from "../views/Home";
 
 interface Props {
   handleselectFleet: React.MouseEventHandler<HTMLSelectElement>;
