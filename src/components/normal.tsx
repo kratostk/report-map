@@ -1,5 +1,5 @@
 import React from "react";
-import { IVehicle } from "../views/Home";
+import { IVehicle } from "../Views/Home";
 
 interface Props {
   vehicle: IVehicle[];

@@ -1,9 +1,9 @@
 import React from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Login from "./views/Login";
-import Home from "./views/Home";
-import RouteGuard from "./views/RouteGuard";
+import Login from "./Views/Login";
+import Home from "./Views/Home";
+import RouteGuard from "./Views/RouteGuard";
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
-import { IFleet } from "../views/Home";
+import { IFleet } from "../Views/Home";
 import { StoreContext } from "../store";
 import { useNavigate } from "react-router-dom";
 
@@ -19,13 +19,20 @@ function Header({ handleselectFleet, fleetData }: Props) {
     navigate("/login");
   };
   return (
-    <header className="border-b border-slate-900/10 flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
+    <header className=" border-slate-900/10 flex items-center z-30 top-0 fixed justify-between w-full h-16 bg-white lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
       <img className="flex-start" src={logo} width="120" />
+
+      <button
+        onClick={handleLogout}
+        className="absolute right-5 border border-red-500 bg-red-500 text-white rounded-md px-4 py-2 m-2 transition duration-500 ease select-none hover:bg-red-600 focus:outline-none focus:shadow-outline"
+      >
+        Logout
+      </button>
 
       {/* Hamburger toggle on sm screen */}
       <div
         onClick={() => setShowMenu(!showMenu)}
-        className="sm:flex items-center space-x-2 md:hidden pr-2"
+        className="absolute right-32 sm:flex items-center space-x-2 md:hidden pr-2"
       >
         <div className="p-1 rounded-md hover:bg-gray-100  focus:outline-none">
           <svg
@@ -77,7 +84,7 @@ function Header({ handleselectFleet, fleetData }: Props) {
       {/* menu on on toggle */}
 
       {/* Search bar */}
-      <div className="hidden md:flex relative col-start-1 col-end-3">
+      <div className="absolute right-32 hidden md:flex relative col-start-1 col-end-3">
         <svg
           className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none "
           xmlns="http://www.w3.org/2000/svg"
@@ -105,10 +112,6 @@ function Header({ handleselectFleet, fleetData }: Props) {
       </div>
 
       {/* Search bar */}
-
-      <button onClick={handleLogout} className="bg-teal-800">
-        Logout
-      </button>
     </header>
   );
 }
