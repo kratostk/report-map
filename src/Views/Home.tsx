@@ -82,7 +82,7 @@ function Home(): JSX.Element {
               <div className="flex justify-between items-center mb-4">
                 <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#3CA06B] rounded-full">
                   <svg
-                    className="w-8 h-8 fill-gray-300 "
+                    className="w-8 h-8 fill-black "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
                   >
@@ -133,7 +133,7 @@ function Home(): JSX.Element {
               <div className="flex justify-between items-center mb-4">
                 <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#85929E] rounded-full">
                   <svg
-                    className="w-8 h-8 fill-gray-300 "
+                    className="w-8 h-8 fill-black "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
                   >
@@ -234,7 +234,7 @@ function Home(): JSX.Element {
               <div className="flex justify-between items-center mb-4">
                 <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#FCFC51] rounded-full">
                   <svg
-                    className="w-8 h-8 fill-gray-300 "
+                    className="w-8 h-8 fill-black "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
                   >
@@ -285,7 +285,7 @@ function Home(): JSX.Element {
               <div className="flex justify-between items-center mb-4">
                 <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#FC77F8] rounded-full">
                   <svg
-                    className="w-8 h-8 fill-gray-300 "
+                    className="w-8 h-8 fill-black "
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
                   >
@@ -338,7 +338,7 @@ function Home(): JSX.Element {
                   <img
                     src={speed}
                     loading="lazy"
-                    className="w-8"
+                    className="w-10"
                     alt="tailus logo"
                   />
                 </button>
@@ -410,7 +410,11 @@ function Home(): JSX.Element {
       ) : null}
       {/* Render placeholder on Vehicles Null, Error, Loading */}
 
-      <div className="mt-24 grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
+      <div className="relative h-28 w-32">
+        <div className="fixed top-0 left-0 right-0 h-28 z-10 bg-white"></div>
+      </div>
+
+      <div className="grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
         {getCard}
       </div>
     </div>
