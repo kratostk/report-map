@@ -4,15 +4,18 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StoreProvider } from "./store";
+import { ThemeProvider } from "./themeContext";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <StoreProvider>
-      <App />
-    </StoreProvider>
+    <ThemeProvider initialTheme={"dark"}>
+      <StoreProvider>
+        <App />
+      </StoreProvider>
+    </ThemeProvider>
   </React.StrictMode>
 );
 reportWebVitals();
