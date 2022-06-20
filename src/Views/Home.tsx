@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, Fragment, useRef } from "react";
 import Header from "../components/Header";
 import useSWR from "swr";
 import axios, { AxiosRequestConfig } from "axios";
 import { StoreContext } from "../store";
-import speed from "../Image/speed.png";
-import nosignal from "../Image/nosignal.png";
+import Vehicle from "../components/Vehicle";
+import { Dialog, Transition } from "@headlessui/react";
 
 export interface IFleet {
   fleet_id: string;
@@ -26,7 +26,9 @@ export interface IVehicle {
   Temp1: string;
   Temp2: string;
 }
-
+/**************************************************************** */
+/*                API caller function           */
+/**************************************************************** */
 const fetcher = async (url: string, config: AxiosRequestConfig) => {
   try {
     const r = await axios.get(url, config);
@@ -40,6 +42,50 @@ function Home(): JSX.Element {
   const { user } = useContext(StoreContext);
 
   const [selectFleet, setSelectFleet] = useState<string>("0");
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
+  const [searchString, setSearchString] = useState<string | null>(null);
+  const [filterData, setFilterData] = useState<IVehicle[] | null>(null);
+  const [open, setOpen] = useState(true);
+  const cancelButtonRef = useRef(null);
+
+  const handleSetShowDropdown = (): void => {
+    setShowMenu(!showMenu);
+  };
+
+  const handleSetShowUserMenu = (): void => {
+    setShowUserMenu(!showUserMenu);
+  };
+  const disablePopupMenu = (): void => {
+    setShowMenu(false);
+    setShowUserMenu(false);
+  };
+  const handleShowModal = (): void => {
+    setOpen(true);
+  };
+
+  const handleSearch: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    setSearchString(e.target.value);
+  };
+
+  const search = (data: IVehicle[], filterStr: string | null): void => {
+    if (!data) {
+      return;
+    }
+    if (filterStr) {
+      let filterd = data.filter((item: IVehicle) => {
+        return item.registration.match(filterStr);
+      });
+      setFilterData(filterd);
+    } else {
+      console.log("search filter is null");
+      setFilterData(data);
+    }
+  };
+
+  React.useEffect(() => {
+    search(vehicleData, searchString);
+  }, [searchString]);
 
   const config = {
     headers: {
@@ -69,328 +115,114 @@ function Home(): JSX.Element {
     setSelectFleet(target.value);
   };
 
-  const getCard = vehicleData
-    ? vehicleData.map((item: IVehicle, i: number) => {
-        if (item.Status === "NORMAL") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#3CA06B] rounded-full">
-                  <svg
-                    className="w-8 h-8 fill-black "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M423.18 195.81l-24.94-76.58C387.51 86.29 356.81 64 322.17 64H157.83c-34.64 0-65.34 22.29-76.07 55.22L56.82 195.8C24.02 205.79 0 235.92 0 271.99V400c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48v-16h256v16c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48V271.99c0-36.07-24.02-66.2-56.82-76.18zm-310.99-66.67c6.46-19.82 24.8-33.14 45.64-33.14h164.34c20.84 0 39.18 13.32 45.64 33.13l20.47 62.85H91.72l20.47-62.84zM80 400c0 8.83-7.19 16-16 16H48c-8.81 0-16-7.17-16-16v-16h48v16zm368 0c0 8.83-7.19 16-16 16h-16c-8.81 0-16-7.17-16-16v-16h48v16zm0-80.01v32H32v-80c0-26.47 21.53-48 48-48h320c26.47 0 48 21.53 48 48v48zM104.8 248C78.84 248 60 264.8 60 287.95c0 23.15 18.84 39.95 44.8 39.95l10.14.1c39.21 0 45.06-20.1 45.06-32.08 0-24.68-31.1-47.92-55.2-47.92zm10.14 56c-3.51 0-7.02-.1-10.14-.1-12.48 0-20.8-6.38-20.8-15.95S92.32 272 104.8 272s31.2 14.36 31.2 23.93c0 7.17-10.53 8.07-21.06 8.07zm260.26-56c-24.1 0-55.2 23.24-55.2 47.93 0 11.98 5.85 32.08 45.06 32.08l10.14-.1c25.96 0 44.8-16.8 44.8-39.95 0-23.16-18.84-39.96-44.8-39.96zm0 55.9c-3.12 0-6.63.1-10.14.1-10.53 0-21.06-.9-21.06-8.07 0-9.57 18.72-23.93 31.2-23.93s20.8 6.38 20.8 15.95-8.32 15.95-20.8 15.95z"></path>
-                  </svg>
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        } else if (item.Status === "ENGINE OFF") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#85929E] rounded-full">
-                  <svg
-                    className="w-8 h-8 fill-black "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M423.18 195.81l-24.94-76.58C387.51 86.29 356.81 64 322.17 64H157.83c-34.64 0-65.34 22.29-76.07 55.22L56.82 195.8C24.02 205.79 0 235.92 0 271.99V400c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48v-16h256v16c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48V271.99c0-36.07-24.02-66.2-56.82-76.18zm-310.99-66.67c6.46-19.82 24.8-33.14 45.64-33.14h164.34c20.84 0 39.18 13.32 45.64 33.13l20.47 62.85H91.72l20.47-62.84zM80 400c0 8.83-7.19 16-16 16H48c-8.81 0-16-7.17-16-16v-16h48v16zm368 0c0 8.83-7.19 16-16 16h-16c-8.81 0-16-7.17-16-16v-16h48v16zm0-80.01v32H32v-80c0-26.47 21.53-48 48-48h320c26.47 0 48 21.53 48 48v48zM104.8 248C78.84 248 60 264.8 60 287.95c0 23.15 18.84 39.95 44.8 39.95l10.14.1c39.21 0 45.06-20.1 45.06-32.08 0-24.68-31.1-47.92-55.2-47.92zm10.14 56c-3.51 0-7.02-.1-10.14-.1-12.48 0-20.8-6.38-20.8-15.95S92.32 272 104.8 272s31.2 14.36 31.2 23.93c0 7.17-10.53 8.07-21.06 8.07zm260.26-56c-24.1 0-55.2 23.24-55.2 47.93 0 11.98 5.85 32.08 45.06 32.08l10.14-.1c25.96 0 44.8-16.8 44.8-39.95 0-23.16-18.84-39.96-44.8-39.96zm0 55.9c-3.12 0-6.63.1-10.14.1-10.53 0-21.06-.9-21.06-8.07 0-9.57 18.72-23.93 31.2-23.93s20.8 6.38 20.8 15.95-8.32 15.95-20.8 15.95z"></path>
-                  </svg>
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        } else if (item.Status === "NO SIGNAL 24Hr.") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#DD3F3C] rounded-full">
-                  <img
-                    src={nosignal}
-                    loading="lazy"
-                    className="w-8"
-                    alt="tailus logo"
-                  />
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        } else if (item.Status === "NO SIGNAL 12Hr.") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#FCFC51] rounded-full">
-                  <svg
-                    className="w-8 h-8 fill-black "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M423.18 195.81l-24.94-76.58C387.51 86.29 356.81 64 322.17 64H157.83c-34.64 0-65.34 22.29-76.07 55.22L56.82 195.8C24.02 205.79 0 235.92 0 271.99V400c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48v-16h256v16c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48V271.99c0-36.07-24.02-66.2-56.82-76.18zm-310.99-66.67c6.46-19.82 24.8-33.14 45.64-33.14h164.34c20.84 0 39.18 13.32 45.64 33.13l20.47 62.85H91.72l20.47-62.84zM80 400c0 8.83-7.19 16-16 16H48c-8.81 0-16-7.17-16-16v-16h48v16zm368 0c0 8.83-7.19 16-16 16h-16c-8.81 0-16-7.17-16-16v-16h48v16zm0-80.01v32H32v-80c0-26.47 21.53-48 48-48h320c26.47 0 48 21.53 48 48v48zM104.8 248C78.84 248 60 264.8 60 287.95c0 23.15 18.84 39.95 44.8 39.95l10.14.1c39.21 0 45.06-20.1 45.06-32.08 0-24.68-31.1-47.92-55.2-47.92zm10.14 56c-3.51 0-7.02-.1-10.14-.1-12.48 0-20.8-6.38-20.8-15.95S92.32 272 104.8 272s31.2 14.36 31.2 23.93c0 7.17-10.53 8.07-21.06 8.07zm260.26-56c-24.1 0-55.2 23.24-55.2 47.93 0 11.98 5.85 32.08 45.06 32.08l10.14-.1c25.96 0 44.8-16.8 44.8-39.95 0-23.16-18.84-39.96-44.8-39.96zm0 55.9c-3.12 0-6.63.1-10.14.1-10.53 0-21.06-.9-21.06-8.07 0-9.57 18.72-23.93 31.2-23.93s20.8 6.38 20.8 15.95-8.32 15.95-20.8 15.95z"></path>
-                  </svg>
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        } else if (item.Status === "IDEL") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#FC77F8] rounded-full">
-                  <svg
-                    className="w-8 h-8 fill-black "
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <path d="M423.18 195.81l-24.94-76.58C387.51 86.29 356.81 64 322.17 64H157.83c-34.64 0-65.34 22.29-76.07 55.22L56.82 195.8C24.02 205.79 0 235.92 0 271.99V400c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48v-16h256v16c0 26.47 21.53 48 48 48h16c26.47 0 48-21.53 48-48V271.99c0-36.07-24.02-66.2-56.82-76.18zm-310.99-66.67c6.46-19.82 24.8-33.14 45.64-33.14h164.34c20.84 0 39.18 13.32 45.64 33.13l20.47 62.85H91.72l20.47-62.84zM80 400c0 8.83-7.19 16-16 16H48c-8.81 0-16-7.17-16-16v-16h48v16zm368 0c0 8.83-7.19 16-16 16h-16c-8.81 0-16-7.17-16-16v-16h48v16zm0-80.01v32H32v-80c0-26.47 21.53-48 48-48h320c26.47 0 48 21.53 48 48v48zM104.8 248C78.84 248 60 264.8 60 287.95c0 23.15 18.84 39.95 44.8 39.95l10.14.1c39.21 0 45.06-20.1 45.06-32.08 0-24.68-31.1-47.92-55.2-47.92zm10.14 56c-3.51 0-7.02-.1-10.14-.1-12.48 0-20.8-6.38-20.8-15.95S92.32 272 104.8 272s31.2 14.36 31.2 23.93c0 7.17-10.53 8.07-21.06 8.07zm260.26-56c-24.1 0-55.2 23.24-55.2 47.93 0 11.98 5.85 32.08 45.06 32.08l10.14-.1c25.96 0 44.8-16.8 44.8-39.95 0-23.16-18.84-39.96-44.8-39.96zm0 55.9c-3.12 0-6.63.1-10.14.1-10.53 0-21.06-.9-21.06-8.07 0-9.57 18.72-23.93 31.2-23.93s20.8 6.38 20.8 15.95-8.32 15.95-20.8 15.95z"></path>
-                  </svg>
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        } else if (item.Status === "SPEEDING") {
-          return (
-            <a
-              href={`https://maps.google.com?q=${item.lat},${item.lon}`}
-              target="_blank"
-              rel="noopener"
-              className="bg-white rounded-3xl border shadow-xl p-8 w-full cursor-pointer hover:border-sky-500"
-            >
-              <div className="flex justify-between items-center mb-4">
-                <button className="inline-flex items-center justify-center w-14 h-14 text-blue-100 bg-[#FA6505] rounded-full">
-                  <img
-                    src={speed}
-                    loading="lazy"
-                    className="w-10"
-                    alt="tailus logo"
-                  />
-                </button>
-                <div>
-                  <span className="font-bold text-green-500">
-                    {"Registration : "}
-                  </span>
-                  <br />
-                  <span className="font-medium text-xs text-gray-500 flex justify-end">
-                    {new Date(item.local_timestamp).toUTCString()}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Status : " + item.Status}
-                </h3>
-                <h3 className="font-semibold text-sm text-gray-400">
-                  {"Speed : " + item.speed + " km/h"}
-                </h3>
-
-                <div className="grid grid-cols-2">
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp1 : " + item.Temp1 + " C"}
-                  </h3>
-                  <h3 className="font-semibold text-sm text-gray-400">
-                    {"Temp2 : " + item.Temp2 + " C"}
-                  </h3>
-                </div>
-
-                <h1 className="font-semibold text-sm text-gray-500">
-                  {"Location : " + item.namt}
-                </h1>
-              </div>
-            </a>
-          );
-        }
-      })
-    : null;
-
   return (
-    <div className="bg-white mx-auto">
-      <Header handleselectFleet={handleselectFleet} fleetData={data} />
+    <div className="mx-auto min-h-screen bg-panel dark:bg-slate-900">
+      <Header
+        handleselectFleet={handleselectFleet}
+        fleetData={data}
+        showUserMenu={showUserMenu}
+        setShowUserMenu={handleSetShowUserMenu}
+        setShowModal={handleShowModal}
+      />
 
-      {/* Render placeholder on Vehicles Null, Error, Loading */}
+      {/******************************************************************************/
+      /*      Search Filter       */
+      /******************************************************************************/}
+
+      {vehicleData && selectFleet !== "0" ? (
+        <div
+          onClick={() => setShowUserMenu(false)}
+          className="pt-28 dark:bg-slate-900 bg-panel py-10"
+        >
+          <form className="flex  items-center max-w-lg mx-auto">
+            <label htmlFor="voice-search" className="sr-only">
+              Search
+            </label>
+            <div className="relative w-full mx-5 md:mx-0">
+              <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg
+                  className="w-5 h-5 text-gray-500"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+              </div>
+              <input
+                onChange={handleSearch}
+                type="text"
+                id="search"
+                className="bg-gray-50 border dark:slate-600 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                placeholder="ค้นหาจากทะเบียน"
+                required
+              />
+            </div>
+          </form>
+
+          <ul className="mt-3 max-w-lg lg:mx-auto mx-5  flex flex-row flex-wrap gap-1">
+            <li className="text-sm border-slate-800 dark:text-sky-500 dark:highlight-white/20 p-2 rounded-full text-sky-800">
+              ทั้งหมด: {vehicleData.length}
+            </li>
+            <li className=" text-sm dark:text-sky-500 p-2 rounded-full ">
+              ปกติ:{" "}
+              {
+                vehicleData.filter((item: IVehicle) => item.Status === "NORMAL")
+                  .length
+              }
+            </li>
+            <li className=" text-sm dark:text-sky-500 p-2 rounded-full ">
+              ดับเครื่องยนต์:{" "}
+              {
+                vehicleData.filter(
+                  (item: IVehicle) => item.Status === "ENGINE OFF"
+                ).length
+              }
+            </li>
+            <li className=" text-sm dark:text-sky-500 p-2 rounded-full">
+              ไม่มีสัญญาน:{" "}
+              {
+                vehicleData.filter(
+                  (item: IVehicle) => item.Status === "NO SIGNAL 24Hr."
+                ).length
+              }
+            </li>
+            <li className=" text-sm  dark:text-sky-500 p-2 rounded-full">
+              จอดติดเครื่องยนต์:{" "}
+              {
+                vehicleData.filter((item: IVehicle) => item.Status === "IDEL")
+                  .length
+              }
+            </li>
+            <li className="text-sm dark:text-sky-500 p-2 rounded-full">
+              เคลื่อนที่:{" "}
+              {
+                vehicleData.filter(
+                  (item: IVehicle) => item.Status === "SPEEDING"
+                ).length
+              }
+            </li>
+          </ul>
+        </div>
+      ) : null}
+
+      {/******************************************************************************/
+      /*      Render placeholder on Vehicles Null, Error, Loading       */
+      /******************************************************************************/}
       {vehicleData === undefined || !vehicleData.length ? (
-        <div className="min-h-screen h-full overflow-hidden flex justify-center items-center">
-          <div className="relative overflow-hidden bg-white mb-12">
+        <div
+          onClick={disablePopupMenu}
+          className="min-h-screen h-full overflow-hidden flex justify-center items-center"
+        >
+          <div className="relative overflow-hidden bg-panel dark:bg-slate-900 mb-12">
             <div className="relative overflow-hidden px-6">
               <img
                 src="https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png"
-                className="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale"
+                className="max-w-full h-auto mx-auto rounded-full bg-gray-50  grayscale"
                 alt="title image"
               />
             </div>
@@ -408,15 +240,128 @@ function Home(): JSX.Element {
           </div>
         </div>
       ) : null}
-      {/* Render placeholder on Vehicles Null, Error, Loading */}
 
-      <div className="relative h-28 w-32">
-        <div className="fixed top-0 left-0 right-0 h-28 z-10 bg-white"></div>
+      {/******************************************************************************/
+      /*      Render on fetched Data       */
+      /******************************************************************************/}
+
+      <div
+        onClick={disablePopupMenu}
+        className="dark:bg-slate-900 bg-panel grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full"
+      >
+        {!searchString && vehicleData
+          ? vehicleData.map((item: IVehicle, i: number) => (
+              <Vehicle vehicle={item} key={i} />
+            ))
+          : filterData?.map((item: IVehicle, i: number) => (
+              <Vehicle vehicle={item} key={i} />
+            ))}
       </div>
 
-      <div className="grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full">
-        {getCard}
-      </div>
+      {/******************************************************************************/
+      /*      Modal Popup       */
+      /******************************************************************************/}
+
+      <Transition.Root show={open} as={Fragment}>
+        <Dialog
+          as="div"
+          className="relative z-10 md:hidden"
+          initialFocus={cancelButtonRef}
+          onClose={setOpen}
+        >
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+
+          <div className="fixed z-10 inset-0 overflow-y-auto">
+            <div className="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                enterTo="opacity-100 translate-y-0 sm:scale-100"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+              >
+                <Dialog.Panel className="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:max-w-lg sm:w-full">
+                  <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div className="sm:flex sm:items-start">
+                      <div className="mx-auto flex-shrink-0 flex items-center justify-center h-16 w-16 rounded-full bg-red-100 sm:mx-0">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-24 h-24 rounded-2xl p-3 border text-blue-400 border-none bg-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          ></path>
+                        </svg>
+                      </div>
+                      <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                        <Dialog.Title
+                          as="h3"
+                          className="text-lg leading-6 font-medium text-gray-900 mb-5"
+                        >
+                          Select Fleet
+                        </Dialog.Title>
+                        <div className="flex relative col-start-1 col-end-3">
+                          <svg
+                            className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none "
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 412 232"
+                          >
+                            <path
+                              d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z"
+                              fill="#648299"
+                              fillRule="nonzero"
+                            />
+                          </svg>
+                          <select
+                            onClick={handleselectFleet}
+                            className="border border-gray-300 rounded-full 0 h-10 pl-5 pr-10  hover:border-gray-400 focus:outline-none appearance-none"
+                          >
+                            <option value="0">Please select Fleet</option>
+                            {data
+                              ? data.map((item: IFleet, i: number) => (
+                                  <option key={i} value={item.fleet_id}>
+                                    {item.fleet_desc}
+                                  </option>
+                                ))
+                              : null}
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button
+                      type="button"
+                      className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
+                      onClick={() => setOpen(false)}
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition.Root>
     </div>
   );
 }

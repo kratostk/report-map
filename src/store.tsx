@@ -4,6 +4,7 @@ export interface IUser {
   username: string;
   email: string;
   token: string;
+  name: string;
 }
 interface StoreContextType {
   user: IUser | null;
