@@ -1,4 +1,4 @@
-import { IVehicle } from "../views/Home";
+import { IVehicle } from "../Views/Home";
 
 const search = (data: IVehicle[], filterStr: string): IVehicle[] => {
   return data.filter((item: IVehicle) => {

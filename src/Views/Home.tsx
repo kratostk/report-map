@@ -49,10 +49,6 @@ function Home(): JSX.Element {
   const [open, setOpen] = useState(true);
   const cancelButtonRef = useRef(null);
 
-  const handleSetShowDropdown = (): void => {
-    setShowMenu(!showMenu);
-  };
-
   const handleSetShowUserMenu = (): void => {
     setShowUserMenu(!showUserMenu);
   };
@@ -98,7 +94,10 @@ function Home(): JSX.Element {
    * Retrive Fleets
    */
   const { data, error } = useSWR(
-    [`/api/fleets/${user!.username}`, config],
+    [
+      `https://geotracker.kratostracking.com/api/fleets/${user!.username}`,
+      config,
+    ],
     fetcher
   );
 
@@ -106,7 +105,10 @@ function Home(): JSX.Element {
    * Retrive Vehicles
    */
   const { data: vehicleData, error: vehicleError } = useSWR(
-    [`/api/fleet/vehicles/${selectFleet}`, config],
+    [
+      `https://geotracker.kratostracking.com/api/fleet/vehicles/${selectFleet}`,
+      config,
+    ],
     fetcher
   );
 
