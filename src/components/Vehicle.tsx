@@ -1,5 +1,5 @@
 import React from "react";
-import { IVehicle } from "../views/Home";
+import { IVehicle } from "../Views/Home";
 import speed from "../Image/speed.png";
 import nosignal from "../Image/nosignal.png";
 import { Radio, MapPin, Navigation, Thermometer } from "react-feather";
@@ -145,7 +145,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             <div className="w-10 h-10">
               <Thermometer className="mr-3 " />
             </div>
-            <h3 className="text-sm">{vehicle.Temp2} c</h3>
+            <h3 className="text-sm">{vehicle.Temp2} °C</h3>
           </div>
         </div>
 

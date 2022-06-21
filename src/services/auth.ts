@@ -27,7 +27,7 @@ interface IAuth {
 function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/login`, credentials)
+      .post(`https://geotracker.kratostracking.com/login`, credentials)
       .then((response) => {
         // persist token in localStorage
         const { token, data } = response.data;
@@ -54,7 +54,7 @@ function isAuth(token: string | null): Promise<IUser> {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(`/login/auth`, config)
+      .get(`https://geotracker.kratostracking.com/login/auth`, config)
       .then((response) => {
         resolve(response.data);
       })
