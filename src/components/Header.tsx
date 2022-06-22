@@ -35,7 +35,7 @@ function Header({
 
       {/* Search bar */}
       <div className="flex items-center justify-center">
-        <div className="hidden md:flex relative col-start-1 col-end-3">
+        <div className="hidden md:flex relative col-start-1 col-end-3 mr-5">
           <svg
             className="w-2 h-2 absolute top-0 right-0 m-4 pointer-events-none "
             xmlns="http://www.w3.org/2000/svg"
@@ -62,29 +62,8 @@ function Header({
           </select>
         </div>
 
-        {/* Hamburger toggle on sm screen */}
-        <div
-          onClick={() => setShowModal()}
-          className="sm:flex items-center space-x-2 md:hidden pr-2"
-        >
-          <div className="p-1 rounded-md hover:bg-gray-100  focus:outline-none">
-            <svg
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-6 h-6 text-gray-700 dark:text-gray-300"
-            >
-              <path
-                fillRule="evenodd"
-                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
-                clipRule="evenodd"
-              ></path>
-            </svg>
-          </div>
-        </div>
-        {/* Hamburger toggle on sm screen */}
-
         {theme === "dark" ? (
-          <button onClick={() => setTheme("light")} className="ml-3">
+          <button onClick={() => setTheme("light")} className="mr-3">
             <span>
               <svg
                 id="theme-toggle-light-icon"
@@ -102,7 +81,7 @@ function Header({
             </span>
           </button>
         ) : (
-          <button onClick={() => setTheme("dark")} className="ml-3">
+          <button onClick={() => setTheme("dark")} className="mr-3">
             <span>
               <svg
                 id="theme-toggle-dark-icon"
@@ -117,12 +96,33 @@ function Header({
           </button>
         )}
 
+        {/* Hamburger toggle on sm screen */}
+        <div
+          onClick={() => setShowModal()}
+          className="sm:flex items-center space-x-2 md:hidden"
+        >
+          <div className="p-1 rounded-md hover:bg-gray-100  focus:outline-none">
+            <svg
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-6 h-6 text-gray-700 dark:text-gray-300"
+            >
+              <path
+                fillRule="evenodd"
+                d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+                clipRule="evenodd"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        {/* Hamburger toggle on sm screen */}
+
         <div
           onClick={() => setShowUserMenu()}
-          className="h-10 w-10 rounded-full ml-3 dark:bg-slate-500 bg-teal-500 flex items-center justify-center cursor-pointer"
+          className="h-10 w-10 rounded-full ml-3 dark:bg-slate-800/5 bg-teal-500 flex items-center justify-center cursor-pointer"
         >
           <p className="text-white">
-            {user?.username.slice(0, 1).toUpperCase()}
+            {user ? user?.username.slice(0, 1).toUpperCase() : null}
           </p>
         </div>
 

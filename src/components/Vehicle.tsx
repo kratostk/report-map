@@ -31,7 +31,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
       href={`https://maps.google.com?q=${vehicle.lat},${vehicle.lon}`}
       target="_blank"
       rel="noopener"
-      className="bg-white dark:bg-slate-800 dark:highlight-white/5 rounded-3xl border dark:border-slate-700 shadow p-8 w-full cursor-pointer hover:border-sky-500"
+      className="bg-white dark:bg-slate-800/50 dark:highlight-white/5 rounded-3xl border dark:border-slate-700 shadow p-8 w-full cursor-pointer hover:border-sky-500"
     >
       <div className="flex justify-between items-center mb-4">
         {vehicle.Status === "NORMAL" ? (
@@ -99,7 +99,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             {"ทะเบียน : " + vehicle.registration}
           </span>
           <br />
-          <span className="font-medium text-xs text-gray-500 dark:text-white flex justify-end">
+          <span className="font-medium text-xs dark:text-blue-500 flex justify-end">
             {new Date(vehicle.local_timestamp).toUTCString()}
           </span>
         </div>

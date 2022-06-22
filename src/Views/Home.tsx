@@ -41,17 +41,16 @@ const fetcher = async (url: string, config: AxiosRequestConfig) => {
 function Home(): JSX.Element {
   const { user } = useContext(StoreContext);
 
+  const [pendingSelectFleet, setPendingSelectFleet] = useState<string | null>(
+    null
+  );
   const [selectFleet, setSelectFleet] = useState<string>("0");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
   const [searchString, setSearchString] = useState<string | null>(null);
   const [filterData, setFilterData] = useState<IVehicle[] | null>(null);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const cancelButtonRef = useRef(null);
-
-  const handleSetShowDropdown = (): void => {
-    setShowMenu(!showMenu);
-  };
 
   const handleSetShowUserMenu = (): void => {
     setShowUserMenu(!showUserMenu);
@@ -63,6 +62,11 @@ function Home(): JSX.Element {
   const handleShowModal = (): void => {
     setOpen(true);
   };
+
+  /**
+   * 1. Fetch vehicles on change
+   * 2. Fetch vehicles on submit
+   */
 
   const handleSearch: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value);
@@ -102,6 +106,22 @@ function Home(): JSX.Element {
     fetcher
   );
 
+  // const setFirstFleet = () => {
+  // if (!data.length) {
+  //   return;
+  // } else {
+  //   setSelectFleet(data[0].fleet_id);
+  // }
+  // };
+  React.useEffect(() => {
+    console.log(data);
+    if (!data) {
+      return;
+    } else {
+      setSelectFleet(data[0].fleet_id);
+    }
+  }, [data]);
+
   /**
    * Retrive Vehicles
    */
@@ -110,8 +130,13 @@ function Home(): JSX.Element {
     fetcher
   );
 
+  /**
+   * Change select fleet on submit button
+   */
+
   const handleselectFleet: React.MouseEventHandler<HTMLSelectElement> = (e) => {
     const target = e.target as HTMLInputElement;
+    console.log(target.value);
     setSelectFleet(target.value);
   };
 
@@ -157,7 +182,7 @@ function Home(): JSX.Element {
                 onChange={handleSearch}
                 type="text"
                 id="search"
-                className="bg-gray-50 border dark:slate-600 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                className="bg-gray-50 border dark:bg-slate-800 border-none dark:highlight-white/5 dark:border-none outline:none border-transparent focus:border-transparent focus:ring-0 dark:text-slate-400 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
                 placeholder="ค้นหาจากทะเบียน"
                 required
               />
@@ -165,17 +190,41 @@ function Home(): JSX.Element {
           </form>
 
           <ul className="mt-3 max-w-lg lg:mx-auto mx-5  flex flex-row flex-wrap gap-1">
-            <li className="text-sm border-slate-800 dark:text-sky-500 dark:highlight-white/20 p-2 rounded-full text-sky-800">
+            <li className="flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-blue-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               ทั้งหมด: {vehicleData.length}
             </li>
-            <li className=" text-sm dark:text-sky-500 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-cyan-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               ปกติ:{" "}
               {
                 vehicleData.filter((item: IVehicle) => item.Status === "NORMAL")
                   .length
               }
             </li>
-            <li className=" text-sm dark:text-sky-500 p-2 rounded-full ">
+            <li className=" flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-purple-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full  ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               ดับเครื่องยนต์:{" "}
               {
                 vehicleData.filter(
@@ -183,7 +232,15 @@ function Home(): JSX.Element {
                 ).length
               }
             </li>
-            <li className=" text-sm dark:text-sky-500 p-2 rounded-full">
+            <li className="flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-pink-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               ไม่มีสัญญาน:{" "}
               {
                 vehicleData.filter(
@@ -191,14 +248,30 @@ function Home(): JSX.Element {
                 ).length
               }
             </li>
-            <li className=" text-sm  dark:text-sky-500 p-2 rounded-full">
+            <li className="flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-sky-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               จอดติดเครื่องยนต์:{" "}
               {
                 vehicleData.filter((item: IVehicle) => item.Status === "IDEL")
                   .length
               }
             </li>
-            <li className="text-sm dark:text-sky-500 p-2 rounded-full">
+            <li className="flex flex-row justify-center items-center text-sm border-slate-800  text-slate-800 dark:text-indigo-500 dark:border-2 dark:highlight-white/20 p-2 rounded-full ">
+              <svg width="12" height="12" fill="none" aria-hidden="true">
+                <path
+                  d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                ></path>
+              </svg>
               เคลื่อนที่:{" "}
               {
                 vehicleData.filter(
@@ -265,7 +338,7 @@ function Home(): JSX.Element {
       <Transition.Root show={open} as={Fragment}>
         <Dialog
           as="div"
-          className="relative z-10 md:hidden"
+          className="relative z-10 md:hidden bg-sky-500"
           initialFocus={cancelButtonRef}
           onClose={setOpen}
         >
@@ -316,7 +389,7 @@ function Home(): JSX.Element {
                           as="h3"
                           className="text-lg leading-6 font-medium text-gray-900 mb-5"
                         >
-                          Select Fleet
+                          กรุณาเลือก Fleet
                         </Dialog.Title>
                         <div className="flex relative col-start-1 col-end-3">
                           <svg
@@ -331,10 +404,10 @@ function Home(): JSX.Element {
                             />
                           </svg>
                           <select
-                            onClick={handleselectFleet}
-                            className="border border-gray-300 rounded-full 0 h-10 pl-5 pr-10  hover:border-gray-400 focus:outline-none appearance-none"
+                            onChange={(e) => setSelectFleet(e.target.value)}
+                            onClick={() => handleselectFleet}
+                            className="border border-gray-300 w-full dark:bg-slate-300 rounded-full 0 h-10 pl-5 pr-10  hover:border-gray-400 focus:outline-none appearance-none"
                           >
-                            <option value="0">Please select Fleet</option>
                             {data
                               ? data.map((item: IFleet, i: number) => (
                                   <option key={i} value={item.fleet_id}>
@@ -353,7 +426,7 @@ function Home(): JSX.Element {
                       className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-teal-600 text-base font-medium text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                       onClick={() => setOpen(false)}
                     >
-                      Submit
+                      ยืนยัน
                     </button>
                   </div>
                 </Dialog.Panel>
