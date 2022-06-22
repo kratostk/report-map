@@ -82,7 +82,6 @@ function Home(): JSX.Element {
       });
       setFilterData(filterd);
     } else {
-      console.log("search filter is null");
       setFilterData(data);
     }
   };
@@ -102,7 +101,7 @@ function Home(): JSX.Element {
    * Retrive Fleets
    */
   const { data, error } = useSWR(
-    [`/api/fleets/${user!.username}`, config],
+    [`api/fleets/${user!.username}`, config],
     fetcher
   );
 
@@ -114,7 +113,6 @@ function Home(): JSX.Element {
   // }
   // };
   React.useEffect(() => {
-    console.log(data);
     if (!data) {
       return;
     } else {
@@ -126,7 +124,7 @@ function Home(): JSX.Element {
    * Retrive Vehicles
    */
   const { data: vehicleData, error: vehicleError } = useSWR(
-    [`/api/fleet/vehicles/${selectFleet}`, config],
+    [`api/fleet/vehicles/${selectFleet}`, config],
     fetcher
   );
 
@@ -195,8 +193,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               ทั้งหมด: {vehicleData.length}
@@ -206,8 +204,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               ปกติ:{" "}
@@ -221,8 +219,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               ดับเครื่องยนต์:{" "}
@@ -237,8 +235,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               ไม่มีสัญญาน:{" "}
@@ -253,8 +251,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               จอดติดเครื่องยนต์:{" "}
@@ -268,8 +266,8 @@ function Home(): JSX.Element {
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
                   stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
                 ></path>
               </svg>
               เคลื่อนที่:{" "}

@@ -49,7 +49,7 @@ function Header({
           </svg>
           <select
             onClick={handleselectFleet}
-            className="border border-gray-300 rounded-full 0 h-10 pl-5 pr-10 bg-sky-400/10 dark:bg-gray-800 text-sky-600 dark:text-slate-300 hover:border-gray-400 focus:outline-none appearance-none"
+            className="border-none border-gray-300 rounded-full 0 h-10 pl-5 pr-10 bg-sky-400/10 dark:bg-gray-800 text-sky-600 dark:text-slate-300 hover:border-gray-400 focus:outline-none appearance-none"
           >
             <option value="0">Please select Fleet</option>
             {fleetData
@@ -74,8 +74,8 @@ function Header({
               >
                 <path
                   d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-                  fill-rule="evenodd"
-                  clip-rule="evenodd"
+                  fillRule="evenodd"
+                  clipRule="evenodd"
                 ></path>
               </svg>
             </span>
@@ -119,7 +119,7 @@ function Header({
 
         <div
           onClick={() => setShowUserMenu()}
-          className="h-10 w-10 rounded-full ml-3 dark:bg-slate-800/5 bg-teal-500 flex items-center justify-center cursor-pointer"
+          className="h-10 w-10 rounded-full ml-3 dark:bg-slate-800/5 bg-teal-500 border-2 border-slate-500 flex items-center justify-center cursor-pointer"
         >
           <p className="text-white">
             {user ? user?.username.slice(0, 1).toUpperCase() : null}
