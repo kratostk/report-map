@@ -63,11 +63,6 @@ function Home(): JSX.Element {
     setOpen(true);
   };
 
-  /**
-   * 1. Fetch vehicles on change
-   * 2. Fetch vehicles on submit
-   */
-
   const handleSearch: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setSearchString(e.target.value);
   };
@@ -101,7 +96,12 @@ function Home(): JSX.Element {
    * Retrive Fleets
    */
   const { data, error } = useSWR(
-    [`api/fleets/${user!.username}`, config],
+    [
+      `http://geotrackerbackend.kratostracking.com:5000/api/fleets/${
+        user!.username
+      }`,
+      config,
+    ],
     fetcher
   );
 
@@ -124,7 +124,10 @@ function Home(): JSX.Element {
    * Retrive Vehicles
    */
   const { data: vehicleData, error: vehicleError } = useSWR(
-    [`api/fleet/vehicles/${selectFleet}`, config],
+    [
+      `http://geotrackerbackend.kratostracking.com:5000/api/fleet/vehicles/${selectFleet}`,
+      config,
+    ],
     fetcher
   );
 
@@ -180,7 +183,7 @@ function Home(): JSX.Element {
                 onChange={handleSearch}
                 type="text"
                 id="search"
-                className="bg-gray-50 border dark:bg-slate-800 border-none dark:highlight-white/5 dark:border-none outline:none border-transparent focus:border-transparent focus:ring-0 dark:text-slate-400 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
+                className="bg-gray-50 border dark:border-slate-700 dark:bg-slate-800 dark:highlight-white/5 outline:none focus:border-transparent focus:ring-0 dark:text-slate-400 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5"
                 placeholder="ค้นหาจากทะเบียน"
                 required
               />
@@ -300,11 +303,11 @@ function Home(): JSX.Element {
             <div className="pt-6 text-center">
               {!vehicleData ? (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
-                  Loading...
+                  โหลดข้อมูล...
                 </p>
               ) : (
                 <p className="text-lg leading-normal text-slate-600 font-bold mb-1">
-                  Please select fleet
+                  กรุณาเลือก Fleet
                 </p>
               )}
             </div>

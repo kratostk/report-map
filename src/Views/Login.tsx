@@ -55,7 +55,11 @@ function Login() {
                 </h2>
               </div>
 
-              <form onSubmit={handleSubmit} className="px-5 py-7">
+              <form
+                onSubmit={handleSubmit}
+                autoComplete="on"
+                className="px-5 py-7"
+              >
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
                   Username
                 </label>

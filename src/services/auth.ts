@@ -1,5 +1,9 @@
 import axios from "axios";
 
+// const axiosConfig = {
+//   baseURL: "http://geotrackerbackend.kratostracking.com:5000/",
+// };
+
 interface ILogin {
   username: string | null;
   password: string | null;
@@ -27,7 +31,10 @@ interface IAuth {
 function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/login`, credentials)
+      .post(
+        `http://geotrackerbackend.kratostracking.com:5000/login`,
+        credentials
+      )
       .then((response) => {
         // persist token in localStorage
         const { token, data } = response.data;
@@ -54,7 +61,10 @@ function isAuth(token: string | null): Promise<IUser> {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(`/login/auth`, config)
+      .get(
+        `http://geotrackerbackend.kratostracking.com:5000/login/auth`,
+        config
+      )
       .then((response) => {
         resolve(response.data);
       })

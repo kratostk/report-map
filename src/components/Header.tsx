@@ -33,7 +33,9 @@ function Header({
     <header className="border-slate-900/10 supports-backdrop-blur:bg-white/95 dark:bg-slate-900/75 backdrop-blur flex items-center z-10 top-0 fixed justify-between w-full h-16 lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
       <img className="flex-start" src={logo} width="120" />
 
-      {/* Search bar */}
+      {/**************************************************/}
+      {/*                 Search bar                     */}
+      {/**************************************************/}
       <div className="flex items-center justify-center">
         <div className="hidden md:flex relative col-start-1 col-end-3 mr-5">
           <svg
@@ -49,7 +51,7 @@ function Header({
           </svg>
           <select
             onClick={handleselectFleet}
-            className="border-none border-gray-300 rounded-full 0 h-10 pl-5 pr-10 bg-sky-400/10 dark:bg-gray-800 text-sky-600 dark:text-slate-300 hover:border-gray-400 focus:outline-none appearance-none"
+            className=" border-gray-300 dark:border-slate-700 border dark:highlight-white/5 rounded-full 0 h-10 pl-5 pr-10 bg-sky-400/10 dark:bg-gray-800 text-sky-600 dark:text-slate-300 hover:border-gray-400  appearance-none"
           >
             <option value="0">Please select Fleet</option>
             {fleetData
