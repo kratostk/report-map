@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// const axiosConfig = {
-//   baseURL: "http://geotrackerbackend.kratostracking.com:5000/",
-// };
+const axiosConfig = {
+  baseURL: "http://geotrackerbackend.kratostracking.com:5000",
+};
 
 interface ILogin {
   username: string | null;
@@ -31,10 +31,7 @@ interface IAuth {
 function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
-      .post(
-        `http://geotrackerbackend.kratostracking.com:5000/login`,
-        credentials
-      )
+      .post(`/login`, credentials, axiosConfig)
       .then((response) => {
         // persist token in localStorage
         const { token, data } = response.data;
@@ -54,6 +51,7 @@ function login(credentials: ILogin): Promise<IUser> {
 function isAuth(token: string | null): Promise<IUser> {
   const config = {
     headers: {
+      baseURL: "http://geotrackerbackend.kratostracking.com:5000",
       "Content-type": "application/json",
       Authorization: `Bearer ${token}`,
     },
@@ -61,10 +59,7 @@ function isAuth(token: string | null): Promise<IUser> {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(
-        `http://geotrackerbackend.kratostracking.com:5000/login/auth`,
-        config
-      )
+      .get(`/login/auth`, config)
       .then((response) => {
         resolve(response.data);
       })
