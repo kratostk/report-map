@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const axiosConfig = {
-  baseURL: "http://geotrackerbackend.kratostracking.com:5000",
-};
+// const axiosConfig = {
+//   baseURL: "http://geotrackerbackend.kratostracking.com:5000",
+// };
 
 interface ILogin {
   username: string | null;
@@ -14,15 +14,6 @@ interface IUser {
   token: string;
   name: string;
 }
-interface IToken {
-  accessToken: string;
-}
-
-interface IAuth {
-  isAuth: boolean;
-  token: IToken;
-  user: IUser;
-}
 
 /**
  *
@@ -31,7 +22,10 @@ interface IAuth {
 function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
-      .post(`/login`, credentials, axiosConfig)
+      .post(
+        `https://geotrackerbackend.kratostracking.com:5000/login`,
+        credentials
+      )
       .then((response) => {
         // persist token in localStorage
         const { token, data } = response.data;
@@ -49,9 +43,8 @@ function login(credentials: ILogin): Promise<IUser> {
  * @param {string | null} token
  */
 function isAuth(token: string | null): Promise<IUser> {
-  const config = {
+  var config = {
     headers: {
-      baseURL: "http://geotrackerbackend.kratostracking.com:5000",
       "Content-type": "application/json",
       Authorization: `Bearer ${token}`,
     },
@@ -59,7 +52,10 @@ function isAuth(token: string | null): Promise<IUser> {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(`/login/auth`, config)
+      .get(
+        `https://geotrackerbackend.kratostracking.com:5000/login/auth`,
+        config
+      )
       .then((response) => {
         resolve(response.data);
       })

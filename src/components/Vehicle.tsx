@@ -134,7 +134,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             <Navigation className="mr-3 " />
           </div>
           <h3 className="text-sm text-slate-700 dark:text-slate-300">
-            {vehicle.speed} km/h
+            {vehicle.speed} กม./ชม.
           </h3>
         </div>
 
@@ -153,7 +153,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
               <Thermometer className="mr-3 " />
             </div>
             <h3 className="text-sm">
-              {vehicle.Temp2.toString() === "?" ? "0" : vehicle.Temp2} c
+              {vehicle.Temp2.toString() === "?" ? "0" : vehicle.Temp2} °C
             </h3>
           </div>
         </div>

@@ -5,6 +5,7 @@ import axios, { AxiosRequestConfig } from "axios";
 import { StoreContext } from "../store";
 import Vehicle from "../components/Vehicle";
 import { Dialog, Transition } from "@headlessui/react";
+import WaveVid from "../assets/videos/bg.mp4";
 
 export interface IFleet {
   fleet_id: string;
@@ -40,10 +41,6 @@ const fetcher = async (url: string, config: AxiosRequestConfig) => {
 
 function Home(): JSX.Element {
   const { user } = useContext(StoreContext);
-
-  const [pendingSelectFleet, setPendingSelectFleet] = useState<string | null>(
-    null
-  );
   const [selectFleet, setSelectFleet] = useState<string>("0");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false);
@@ -97,7 +94,7 @@ function Home(): JSX.Element {
    */
   const { data, error } = useSWR(
     [
-      `http://geotrackerbackend.kratostracking.com:5000/api/fleets/${
+      `https://geotrackerbackend.kratostracking.com:5000/api/fleets/${
         user!.username
       }`,
       config,
@@ -125,7 +122,7 @@ function Home(): JSX.Element {
    */
   const { data: vehicleData, error: vehicleError } = useSWR(
     [
-      `http://geotrackerbackend.kratostracking.com:5000/api/fleet/vehicles/${selectFleet}`,
+      `https://geotrackerbackend.kratostracking.com:5000/api/fleet/vehicles/${selectFleet}`,
       config,
     ],
     fetcher
@@ -147,7 +144,7 @@ function Home(): JSX.Element {
       /*      Video BG       */
       /******************************************************************************/}
 
-      <div className="fixed w-full h-full to-back">
+      <div className="fixed w-screen h-screen to-back">
         <video
           className="w-screen h-full object-cover"
           width="320"
@@ -156,10 +153,7 @@ function Home(): JSX.Element {
           loop
           muted
         >
-          <source
-            src="https://assets.codepen.io/3364143/7btrrd.mp4"
-            type="video/mp4"
-          />
+          <source src={WaveVid} type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>
@@ -212,7 +206,7 @@ function Home(): JSX.Element {
           </form>
 
           <ul className=" glass-bg bg-glass rounded-lg dark:bg-slate-800/50 bg-glass highlight-white/5 mt-3 max-w-lg lg:mx-auto mx-5  flex flex-row flex-wrap gap-1">
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-blue-500 dark:highlight-white/20 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -223,7 +217,7 @@ function Home(): JSX.Element {
               </svg>
               ทั้งหมด: {vehicleData.length}
             </li>
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-emerald-500 dark:highlight-white/20 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -238,7 +232,7 @@ function Home(): JSX.Element {
                   .length
               }
             </li>
-            <li className=" flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-purple-500 dark:highlight-white/20 p-2 rounded-full  ">
+            <li className=" flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full  ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -254,7 +248,7 @@ function Home(): JSX.Element {
                 ).length
               }
             </li>
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-pink-500 dark:highlight-white/20 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -270,7 +264,7 @@ function Home(): JSX.Element {
                 ).length
               }
             </li>
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-sky-500 dark:highlight-white/20 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -285,7 +279,7 @@ function Home(): JSX.Element {
                   .length
               }
             </li>
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-amber-500 dark:highlight-white/20 p-2 rounded-full ">
+            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <svg width="12" height="12" fill="none" aria-hidden="true">
                 <path
                   d="M3.75 1v10M8.25 1v10M1 3.75h10M1 8.25h10"
@@ -318,7 +312,7 @@ function Home(): JSX.Element {
               <img
                 src="https://tailone.tailwindtemplate.net/src/img/dummy/avatar1.png"
                 className="max-w-full h-auto mx-auto rounded-full bg-glass glass-bg"
-                alt="title image"
+                alt="title"
               />
             </div>
             <div className="pt-6 text-center">

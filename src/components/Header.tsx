@@ -46,16 +46,16 @@ function Header({
           >
             <path
               d="M206 171.144L42.678 7.822c-9.763-9.763-25.592-9.763-35.355 0-9.763 9.764-9.763 25.592 0 35.355l181 181c4.88 4.882 11.279 7.323 17.677 7.323s12.796-2.441 17.678-7.322l181-181c9.763-9.764 9.763-25.592 0-35.355-9.763-9.763-25.592-9.763-35.355 0L206 171.144z"
-              fill="#2a2a2a"
+              fill="#ededed"
               fillRule="nonzero"
             />
           </svg>
           <select
             onClick={handleselectFleet}
-            className="  bg-glass glass-bg dark:highlight-white/5 highlight-white/5 rounded-full 0 h-10 pl-5 pr-10 text-slate-700 hover:border-gray-400  appearance-none"
+            className="  bg-glass glass-bg dark:highlight-white/5 dark:bg-transparent dark:text-white dark:border highlight-white/5 rounded-full 0 h-10 pl-5 pr-10 text-slate-700 hover:border-gray-400  appearance-none"
           >
             <option
-              className="bg-glass glass-bg dark:highlight-white/5 highlight-white/5"
+              className="dark:highlight-white/5 dark:text-white dark:bg-slate-800 highlight-white/5"
               value="0"
             >
               Please select Fleet
@@ -63,7 +63,7 @@ function Header({
             {fleetData
               ? fleetData.map((item, i) => (
                   <option
-                    className="bg-glass glass-bg dark:highlight-white/5 highlight-white/5"
+                    className="dark:bg-slate-800 dark:highlight-white/5 dark:text-white highlight-white/5"
                     key={i}
                     value={item.fleet_id}
                   >
@@ -97,7 +97,7 @@ function Header({
             <span>
               <svg
                 id="theme-toggle-dark-icon"
-                className="w-5 h-5 text-slate-700"
+                className="w-5 h-5 text-slate-300"
                 fill="currentColor"
                 viewBox="0 0 20 20"
                 xmlns="http://www.w3.org/2000/svg"
@@ -117,7 +117,7 @@ function Header({
             <svg
               viewBox="0 0 20 20"
               fill="currentColor"
-              className="w-6 h-6 text-gray-700 dark:text-gray-300"
+              className="w-6 h-6 text-gray-300"
             >
               <path
                 fillRule="evenodd"
