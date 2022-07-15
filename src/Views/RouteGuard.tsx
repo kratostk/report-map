@@ -1,18 +1,18 @@
-import React, { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { StoreContext } from "../store";
+import { StoreContext } from "../storeContext";
 import { isAuth as isAuthService } from "../services/auth";
 import { useNavigate } from "react-router-dom";
+import { NyanAlert } from "../utils/NyanSwal";
 
 function RouteGuard(): JSX.Element {
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
-  const { user, loggedIn } = useContext(StoreContext);
+  const { loggedIn } = useContext(StoreContext);
   const navigate = useNavigate();
 
   /**
-   * If user lands on home grab token in localStorage to authorize user.
-   * if token is valid then access is granted otherwise reject to login page.
+   * WHEN USER LANDS ON THE HOME PAGE GRAB TOKEN IN LOCALSTORAGE AND MAKE A REQUEST TO AUTHORIZE USER
    */
   const checkAuth = async () => {
     try {
@@ -27,12 +27,16 @@ function RouteGuard(): JSX.Element {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkAuth();
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div>
+        <p>Loading</p>
+      </div>
+    );
   }
   return !isAuth ? <Navigate to="/login" /> : <Outlet />;
 }

@@ -12,6 +12,72 @@ body {
 }
 
 @layer components {
+  .textPolyFillWrap {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-wrap: break-all;
+    word-wrap: break-word;
+    white-space: normal;
+    /* overflow: hidden; */
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    white-space: -pre-wrap; /* Opera <7 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* IE */
+  }
+  .textPolyFill {
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-wrap: break-all;
+    white-space: normal;
+  }
+  .centerBox {
+    display: fixed;
+    bottom: 150px;
+    max-height: 300px;
+    overflow-y: auto;
+    /* margin: 1rem; */
+    width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .minWidthFleetList {
+    min-width: 350px;
+  }
+
+  /*******************************************************************************************************/
+  /*       FIREFOX DOESN'T SUPPORT BACKDROP-FILTER OUT OF THE BOX          */
+  /*       AND HENCE TO APPLY BACKDROP-FILTER SUPPORTED BROWSER AND FALLBACK FOR THOSE DOES NOT          */
+
+  /* backdrop-filter fallback */
+  .backdropBlur {
+    background-color: #ffffff;
+    /* box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1),
+      0 4px 6px -4px rgb(0 0 0 / 0.1); */
+  }
+  .darkBackdropBlur {
+    background-color: #0f172a;
+  }
+
+  /* if backdrop support: apply this styles */
+  @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    .backdropBlur {
+      background-color: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      /* -webkit-backdrop-filter: blur(30px); */
+    }
+  }
+  @supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
+    .darkBackdropBlur {
+      background-color: rgba(15, 23, 42, 0.2);
+      backdrop-filter: blur(10px);
+      /* -webkit-backdrop-filter: blur(30px); */
+    }
+  }
+  /*******************************************************************************************************/
+
   .dark-glass {
     background-color: rgba(16 18 27 / 40%);
   }

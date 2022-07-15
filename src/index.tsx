@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { StoreProvider } from "./store";
+import { StoreProvider } from "./storeContext";
 import { ThemeProvider } from "./themeContext";
 
 const root = ReactDOM.createRoot(

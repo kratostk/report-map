@@ -1,39 +1,73 @@
 import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
 import { login } from "../services/auth";
-import { useNavigate, Navigate } from "react-router-dom";
-import { StoreContext, IUser } from "../store";
+import { useNavigate } from "react-router-dom";
+import { StoreContext } from "../storeContext";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+import { NyanAlert } from "../utils/NyanSwal";
 
 export interface ILogin {
   username: string | null;
   password: string | null;
 }
+interface Res {
+  response: ErrResponse;
+}
+interface ErrResponse {
+  data: string;
+  status: number;
+}
 
-function Login() {
-  const { user, loggedIn } = useContext(StoreContext);
+const Login = (): JSX.Element => {
+  const MySwal = withReactContent(Swal);
+  const { loggedIn } = useContext(StoreContext);
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState<ILogin>({
     username: null,
     password: null,
   });
 
-  const handleType: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+  const ErrorSwal = (status: number, text: string) => {
+    MySwal.fire({
+      icon: "error",
+      text: text,
+      confirmButtonColor: "#3085d6",
+    });
+  };
+
+  const handleUserInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     setCredentials((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
 
-  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
+  const handleLoginFormSubmit: React.FormEventHandler<HTMLFormElement> = async (
+    e
+  ) => {
     e.preventDefault();
 
-    try {
-      const authUser = await login(credentials);
-      // set global state
-      loggedIn(authUser);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
+    if (!credentials.username || !credentials.password) {
+      return;
+    } else {
+      try {
+        NyanAlert(); // Show Nyan Cat Swal on loading stage
+        const authUser = await login(credentials);
+        loggedIn(authUser); // set global state
+        navigate("/");
+      } catch (err) {
+        const u = err as Res; // by default, TS cast Promise err type as "unknown"
+        if (u.response.status === 0) {
+          // if req doesn't reach the server, status error = 0
+          ErrorSwal(
+            u.response.status,
+            "ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ ตรวจสอบการเชื่อมต่ออินเทอร์เน็ตของคุณและลองอีกครั้ง :("
+          );
+        } else {
+          ErrorSwal(u.response.status, u.response.data);
+        }
+      }
     }
   };
 
@@ -43,48 +77,48 @@ function Login() {
         <div className="m-auto md:w-8/12 lg:w-6/12 xl:w-6/12">
           <div className="rounded-xl bg-white shadow-xl">
             <div className="p-6 sm:p-16">
-              <div className="space-y-4">
+              <div className="flex justify-center items-center flex-col">
                 <img
                   src={logo}
                   loading="lazy"
                   className="w-20"
                   alt="tailus logo"
                 />
-                <h2 className="mb-8 text-xl text-cyan-900 font-bold xl:text-2xl lg:text-2xl">
-                  Sign in to Kratos Geo Tracker
+                <h2 className="mb-8 text-xl text-center text-cyan-900 font-bold xl:text-2xl lg:text-2xl">
+                  GEO Tracker
                 </h2>
               </div>
 
               <form
-                onSubmit={handleSubmit}
+                onSubmit={handleLoginFormSubmit}
                 autoComplete="on"
-                className="px-5 py-7"
+                className="px-5 pb-7"
               >
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Username
+                  ชื่อผู้ใช้งาน
                 </label>
                 <input
                   name="username"
-                  onChange={handleType}
+                  onChange={handleUserInput}
                   type="text"
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
                   placeholder="Username"
                 />
                 <label className="font-semibold text-sm text-gray-600 pb-1 block">
-                  Password
+                  รหัสผ่าน
                 </label>
                 <input
                   name="password"
-                  onChange={handleType}
+                  onChange={handleUserInput}
                   type="password"
                   className="border rounded-lg px-3 py-2 mt-1 mb-5 text-sm w-full"
-                  placeholder="Username"
+                  placeholder="Password"
                 />
                 <button
                   type="submit"
                   className="transition duration-200 bg-[#2F847C] hover:bg-[#054B4A] focus:bg-[#054B4A] focus:shadow-sm focus:ring-4 focus:ring-[#2F847C] focus:ring-opacity-50 text-white w-full py-2.5 rounded-lg text-sm shadow-sm hover:shadow-md font-semibold text-center inline-block"
                 >
-                  <span className="inline-block mr-2">Login</span>
+                  <span className="inline-block mr-2">เข้าสู่ระบบ</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -104,13 +138,14 @@ function Login() {
 
               <div className="space-y-4 text-gray-600 text-center sm:-mb-8">
                 <p className="text-xs">
-                  By proceeding, you agree to our{" "}
+                  เว็บไซส์ของเรามีการเก็บ Cookies ซึ่งช่วยให้เราจดจำคุณได้
+                  ในการเข้าสู่ะบบถือว่าคุณยอมรับใน{" "}
                   <a href="#" className="underline">
-                    Terms of Use
+                    นโยบาย
                   </a>{" "}
-                  and confirm you have read our{" "}
+                  และ{" "}
                   <a href="#" className="underline">
-                    Privacy and Cookie Statement
+                    ความเป็นส่วนตัว
                   </a>
                   .
                 </p>
@@ -121,6 +156,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;
