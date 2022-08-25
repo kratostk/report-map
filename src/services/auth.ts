@@ -22,10 +22,7 @@ interface IUser {
 function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
-      .post(
-        `https://geotrackerbackend2.kratostracking.com:5001/login`,
-        credentials
-      )
+      .post(`http://localhost:5000/login`, credentials)
       .then((response) => {
         // persist token in localStorage
         const { token, data } = response.data;
@@ -52,10 +49,7 @@ function isAuth(token: string | null): Promise<IUser> {
 
   return new Promise((resolve, reject) => {
     axios
-      .get(
-        `https://geotrackerbackend2.kratostracking.com:5001/login/auth`,
-        config
-      )
+      .get(`http://localhost:5000/login/auth`, config)
       .then((response) => {
         resolve(response.data);
       })

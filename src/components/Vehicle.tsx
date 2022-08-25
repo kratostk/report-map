@@ -2,11 +2,11 @@ import React from "react";
 import { IVehicle } from "../views/Home";
 import { dateENToTH, timeENToTH } from "../utils/formatStr";
 import NoSignalIcon from "../Image/no-signal2.svg";
-import SpeedingIcon from "../Image/speeding1.svg";
 import { FiRadio, FiNavigation, FiThermometer, FiMapPin } from "react-icons/fi";
 import { GiCarWheel } from "react-icons/gi";
 import GPinIcon from "../assets/svg/g-pin.svg";
 import OverSpeedingIcon from "../assets/images/speedometer.png";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   vehicle: IVehicle;
@@ -30,14 +30,23 @@ function Vehicle({ vehicle }: Props): JSX.Element {
     }
   };
 
+  const navigate = useNavigate();
+  function handleOSMMap() {
+    navigate(`/tracker/:${1234}`);
+  }
+
   return (
-    <a
-      href={`https://maps.google.com?q=${vehicle.lat},${vehicle.lon}`}
-      target="_blank"
-      rel="noopener"
-      className="dark:bg-slate-800/50 hover:border hover:border-cyan-500 dark:hover:border dark:hover:border-sky-500 bg-white dark:highlight-white/5 rounded-3xl shadow-lg p-8 w-full cursor-pointer"
-    >
-      <div className="flex justify-between items-center mb-4">
+    // <a
+    //   href={`https://maps.google.com?q=${vehicle.lat},${vehicle.lon}`}
+    //   target="_blank"
+    //   rel="noopener"
+    //   className="dark:bg-slate-800/50 hover:border hover:border-cyan-500 dark:hover:border dark:hover:border-sky-500 bg-white dark:highlight-white/5 rounded-3xl shadow-lg p-8 w-full cursor-pointer"
+    // >
+
+    // </a>
+
+    <div className="dark:bg-slate-800/50  bg-white dark:highlight-white/5 rounded-3xl shadow-lg p-8 w-full">
+      <div className="flex justify-between items-center">
         {vehicle.Status === "NORMAL" ? (
           <div className="inline-flex items-center justify-center w-14 h-14 text-blue-100 dark:text-white bg-[#3CA06B] rounded-full">
             <svg
@@ -153,7 +162,6 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             </span>
           </div>
         </div>
-
         <div className=" mt-3 dark:text-slate-300 text-slate-700 flex flex-row items-start justify-start">
           <div className="w-10 h-10">
             <FiNavigation />
@@ -162,7 +170,6 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             {vehicle.speed} กม./ชม.
           </h3>
         </div>
-
         <div className="grid grid-cols-2">
           <div className="text-slate-700 dark:text-slate-300 flex flex-row items-start justify-start">
             <div className="w-10 h-10">
@@ -182,7 +189,6 @@ function Vehicle({ vehicle }: Props): JSX.Element {
             </h3>
           </div>
         </div>
-
         <div className=" mt-3 text-slate-700 dark:text-slate-300 flex flex-row items-start justify-start">
           <figure className="w-6 h-6 flex justify-center items-center mr-2">
             {/* <FiMapPin /> */}
@@ -194,8 +200,19 @@ function Vehicle({ vehicle }: Props): JSX.Element {
           </figure>
           <h3 className="text-sm w-full">{vehicle.namt}</h3>
         </div>
+        <div className="flex flex-row gap-3 mt-3">
+          <button className="rounded-md p-2 bg-teal-800 text-sky-600 bg-sky-400/10 px-2 py-0.5  dark:text-sky-400">
+            Google Map
+          </button>
+          <button
+            onClick={handleOSMMap}
+            className="rounded-md p-2 text-white bg-sky-700"
+          >
+            OSM Map
+          </button>
+        </div>
       </div>
-    </a>
+    </div>
   );
 }
 
