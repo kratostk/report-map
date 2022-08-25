@@ -1,11 +1,11 @@
 import React from "react";
 import { IVehicle, IFleet } from "../views/Home";
 import { AiFillCar } from "react-icons/ai";
-import { GiCarKey, GiF1Car } from "react-icons/gi";
 import { FaCarSide } from "react-icons/fa";
-import { BsFillLightningChargeFill } from "react-icons/bs";
-import { MdSignalWifiOff } from "react-icons/md";
-import { calcFuel } from "../utils/calcFuel";
+import { IoMdFlashOff } from "react-icons/io";
+import { TbCarOff } from "react-icons/tb";
+import { GiRaceCar } from "react-icons/gi";
+import { RiCarWashingFill } from "react-icons/ri";
 
 interface Props {
   vehicles: IVehicle[];
@@ -28,8 +28,6 @@ const Banner = ({
     );
     return res[0].fleet_desc;
   };
-
-  // console.log("Fuel data", fuels);
 
   return (
     <>
@@ -61,14 +59,14 @@ const Banner = ({
                 onChange={handleVehicleSearchFilter}
                 type="text"
                 id="search"
-                className="bg-white border-2 border-slate-600 outline-slate-600 shadow-md dark:bg-slate-800/50 dark:highlight-white/5 outline:noneS focus:border-none dark:text-slate-400 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
+                className="bg-white shadow-md font-Kanit dark:bg-slate-800/50 dark:highlight-white/5 outline:noneS focus:border-none dark:text-slate-400 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
                 placeholder={`ค้นหาทะเบียนจากกลุ่มยานยนต์ "${getFleetName()}"`}
                 required
               />
             </div>
           </form>
 
-          <ul className="bg-white rounded-lg shadow-md dark:bg-slate-800/50 bg-glass highlight-white/5 mt-3 max-w-lg lg:mx-auto mx-5  flex flex-row flex-wrap gap-1">
+          <ul className="bg-white font-Kanit rounded-lg shadow-md dark:bg-slate-800/50 bg-glass highlight-white/5 mt-3 max-w-lg lg:mx-auto mx-5  flex flex-row flex-wrap gap-1">
             <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
               <AiFillCar className="mr-1 text-slate-700 dark:text-white" />
               ทั้งหมด: {vehicles.length}
@@ -82,7 +80,7 @@ const Banner = ({
               }
             </li>
             <li className=" flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full  ">
-              <MdSignalWifiOff className="mr-1 text-slate-700 dark:text-white" />
+              <TbCarOff className="mr-1 text-slate-700 dark:text-white" />
               ดับเครื่องยนต์:{" "}
               {
                 vehicles.filter(
@@ -91,7 +89,7 @@ const Banner = ({
               }
             </li>
             <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
-              <BsFillLightningChargeFill className="mr-1 text-slate-700 dark:text-white" />
+              <IoMdFlashOff className="mr-1 text-slate-700 dark:text-white" />
               ไม่มีสัญญาณ:{" "}
               {
                 vehicles.filter(
@@ -99,8 +97,8 @@ const Banner = ({
                 ).length
               }
             </li>
-            <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
-              <GiCarKey className="mr-1 text-slate-700 dark:text-white" />
+            <li className="flex flex-row justify-center items-center text-sm text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
+              <RiCarWashingFill className="mr-1 text-slate-700 dark:text-white" />
               จอดติดเครื่องยนต์:{" "}
               {
                 vehicles.filter((item: IVehicle) => item.Status === "IDEL")
@@ -108,7 +106,7 @@ const Banner = ({
               }
             </li>
             <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
-              <GiF1Car className="m-1 text-2xl text-slate-700 dark:text-white" />
+              <GiRaceCar className="m-1 text-2xl text-slate-700 dark:text-white" />
               ความเร็วเกินกำหนด:{" "}
               {
                 vehicles.filter((item: IVehicle) => item.Status === "SPEEDING")

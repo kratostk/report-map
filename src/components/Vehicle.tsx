@@ -35,7 +35,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
       href={`https://maps.google.com?q=${vehicle.lat},${vehicle.lon}`}
       target="_blank"
       rel="noopener"
-      className="dark:bg-slate-800/50 dark:hover:border dark:hover:border-sky-500 bg-white hover:bg-white/50 dark:highlight-white/5 rounded-3xl shadow-lg p-8 w-full cursor-pointer"
+      className="dark:bg-slate-800/50 hover:border hover:border-cyan-500 dark:hover:border dark:hover:border-sky-500 bg-white dark:highlight-white/5 rounded-3xl shadow-lg p-8 w-full cursor-pointer"
     >
       <div className="flex justify-between items-center mb-4">
         {vehicle.Status === "NORMAL" ? (
@@ -99,7 +99,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
         <div className="overflow-hidden textPolyFillWrap">
           <div className="flex justify-center items-center m-0 p-0">
             <GiCarWheel className="dark:text-white shrink-0 text-slate-800 mr-2" />
-            <span className="font-bold text-slate-900 dark:text-sky-500 w-full textPolyFill">
+            <span className="font-Kanit font-bold text-slate-900 dark:text-sky-500 w-full textPolyFill">
               {"ทะเบียน : " + vehicle.registration}
             </span>
           </div>
@@ -124,7 +124,7 @@ function Vehicle({ vehicle }: Props): JSX.Element {
           {/* <FontAwesomeIcon icon="fa-brands fa-safari" /> */}
           <FiRadio className="mr-3" />
           <div className="flex items-center justify-center">
-            <h3>{statusEnToth(vehicle.Status)}</h3>
+            <h3 className="font-Kanit">{statusEnToth(vehicle.Status)}</h3>
             {/* {vehicle.Status === "NORMAL" ? (
               <p className="flashing ml-3"></p>
             ) : null} */}

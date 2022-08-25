@@ -34,14 +34,15 @@ body {
   .centerBox {
     display: fixed;
     bottom: 150px;
-    max-height: 300px;
     overflow-y: auto;
-    /* margin: 1rem; */
     width: 100%;
     overflow-x: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+  .smFleetsBox {
+    max-height: 300px;
   }
   .minWidthFleetList {
     min-width: 350px;
@@ -112,5 +113,44 @@ body {
     to {
       background: white;
     }
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: "GoogleSans";
+    src: local(""),
+      url("./assets/fonts/google-sans/ProductSans-Black.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "GoogleSans";
+    src: local(""),
+      url("./assets/fonts/google-sans/ProductSans-Regular.ttf")
+        format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* for thai charecters specifically */
+  @font-face {
+    font-family: "Kanit";
+    src: local(""),
+      url("./assets/fonts/kanit/Kanit-Bold.ttf") format("truetype");
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0E00 - U+0E7F;
+  }
+  @font-face {
+    font-family: "Kanit";
+    src: local(""),
+      url("./assets/fonts/kanit/Kanit-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+    unicode-range: U+0E00 - U+0E7F;
   }
 }

@@ -11,11 +11,11 @@ function Fleets({ handleselectFleet }: Props) {
   // console.log("FLEETS COMPONENT", fleetsData);
   return (
     <>
-      {fleetsData?.slice(0, 200).map((fleet: IFleet) => (
+      {fleetsData?.slice(0, 200).map((fleet: IFleet, index: number) => (
         <li
           onClick={handleselectFleet}
           className="p-5 cursor-pointer hover:bg-slate-200 overflow-hidden dark:text-white dark:hover:bg-slate-900 dark:bg-slate-800 bg-white"
-          key={fleet.fleet_id}
+          key={index}
           value={fleet.fleet_id}
         >
           {fleet.fleet_desc}

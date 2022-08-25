@@ -96,10 +96,10 @@ function Header({
               onChange={(e) => setSearchString(e.target.value)}
               type="text"
               id="search"
-              className="glass-bg bg-glass border-2 dark:bg-slate-800/50 dark:highlight-white/5 outline:none focus:border-transparent dark:text-slate-400 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
+              className="glass-bg bg-glass border-2 font-Kanit dark:bg-slate-800/50 dark:highlight-white/5 outline:none focus:border-transparent dark:text-slate-400 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2.5"
               placeholder={
                 !selectFleet && !fleetData?.length
-                  ? `เลือกฟลีท`
+                  ? `เลือกกลุ่มยานยนต์`
                   : selectFleetName!
               }
               required
@@ -198,13 +198,13 @@ function Header({
 
         {showUserMenu ? (
           <ul className="bg-white absolute z-50 top-full right-5 dark:bg-slate-900 dark:highlight-white/5 rounded-lg ring-1 shadow-lg overflow-hidden">
-            <li className="mb-3 flex flex-row py-1 px-2 dark:text-white text-slate-800">
+            <li className="flex flex-row p-4 dark:text-white text-slate-800">
               <User className="mr-3" />
               {user?.username}
             </li>
             <li
               onClick={handleLogout}
-              className="py-1 px-2 flex items-center cursor-pointer dark:text-white text-slate-800 dark:hover:bg-gray-700"
+              className="p-4 flex items-center cursor-pointer dark:text-white text-slate-800 dark:hover:bg-gray-700"
             >
               <LogOut className="mr-3 " />
               Logout

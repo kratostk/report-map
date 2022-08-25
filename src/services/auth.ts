@@ -23,7 +23,7 @@ function login(credentials: ILogin): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
       .post(
-        `https://geotrackerbackend.kratostracking.com:5000/login`,
+        `https://geotrackerbackend2.kratostracking.com:5001/login`,
         credentials
       )
       .then((response) => {
@@ -53,7 +53,7 @@ function isAuth(token: string | null): Promise<IUser> {
   return new Promise((resolve, reject) => {
     axios
       .get(
-        `https://geotrackerbackend.kratostracking.com:5000/login/auth`,
+        `https://geotrackerbackend2.kratostracking.com:5001/login/auth`,
         config
       )
       .then((response) => {

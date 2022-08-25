@@ -76,7 +76,7 @@ const SelectFleetSM = ({
                     </div>
                     <Dialog.Title
                       as="h3"
-                      className="text-lg leading-6 font-medium text-slate-800 dark:text-white mb-5"
+                      className="text-lg leading-6 font-Kanit font-medium text-slate-800 dark:text-white mb-5"
                     >
                       กรุณาเลือก กลุ่มยานยนต์
                     </Dialog.Title>
@@ -97,7 +97,7 @@ const SelectFleetSM = ({
                         onChange={handleSetSearchString}
                         type="text"
                         id="search"
-                        className="glass-bg bg-glass w-full dark:border border dark:bg-slate-800/50 dark:highlight-white/5 outline:none focus:border-transparent dark:text-slate-400 text-gray-900 text-sm rounded-lg block pl-10 p-2.5"
+                        className="glass-bg bg-glass font-Kanit w-full dark:border border dark:bg-slate-800/50 dark:highlight-white/5 outline:none focus:border-transparent dark:text-slate-400 text-gray-900 text-sm rounded-lg block pl-10 p-2.5"
                         placeholder="เลือกกลุ่มยานยนต์"
                         required
                       />
@@ -105,11 +105,11 @@ const SelectFleetSM = ({
                   </div>
                 </div>
 
-                <div className="w-full centerBox ">
-                  <div className="w-full ">
+                <div className="w-full centerBox">
+                  <div className="w-full smFleetsBox">
                     <ul className="mt-4">
                       {fleets && !searchString
-                        ? fleets.slice(0, 200).map((item: IFleet) => (
+                        ? fleets.map((item: IFleet) => (
                             <li
                               onClick={handleSelectFleetOnMobile}
                               className="dark:text-white py-4 px-6 dark:hover:bg-slate-800/50 hover:bg-gray-100 cursor-pointer"

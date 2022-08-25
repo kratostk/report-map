@@ -4,8 +4,7 @@ import useSWR from "swr";
 import axios, { AxiosRequestConfig } from "axios";
 import { StoreContext } from "../storeContext";
 import Vehicle from "../components/Vehicle";
-import { NyanSwal } from "../utils/NyanSwal";
-import { MdGpsFixed } from "react-icons/md";
+import { GiCarWheel } from "react-icons/gi";
 import SelectFleetSM from "../components/SelectFleetSM";
 import Banner from "../components/Banner";
 
@@ -104,7 +103,7 @@ function Home(): JSX.Element {
    */
   const { data: fleets, error: fetchFleetError } = useSWR(
     [
-      `https://geotrackerbackend.kratostracking.com:5000/api/fleets/${
+      `https://geotrackerbackend2.kratostracking.com:5001/api/fleets/${
         user!.username
       }`,
       config,
@@ -117,7 +116,7 @@ function Home(): JSX.Element {
    */
   const { data: vehicles, error: fetchVehicleError } = useSWR(
     [
-      `https://geotrackerbackend.kratostracking.com:5000/api/fleet/vehicles/${selectFleet}`,
+      `https://geotrackerbackend2.kratostracking.com:5001/api/fleet/vehicles/${selectFleet}`,
       config,
     ],
     fetcher,
@@ -141,7 +140,6 @@ function Home(): JSX.Element {
     e
   ) => {
     const target = e.target as HTMLInputElement;
-    console.log("selected fleet", e);
     setSelectFleet(target.value);
     setOpen(false);
   };
@@ -159,10 +157,6 @@ function Home(): JSX.Element {
       fetchFleets(fleets);
     }
   }, [fleets]);
-
-  React.useEffect(() => {
-    NyanSwal.close();
-  }, []);
 
   return (
     <div className="mx-auto min-h-screen bg-sky-100 dark:bg-slate-900">
@@ -206,12 +200,12 @@ function Home(): JSX.Element {
             </div>
             <div className="pt-6 text-center">
               {!vehicles ? (
-                <p className="text-lg leading-normal text-slate-800 font-bold mb-1">
+                <p className="text-lg font-Kanit leading-normal text-slate-800 font-bold mb-1">
                   โหลดข้อมูล...
                 </p>
               ) : (
-                <p className="text-lg leading-normal text-slate-800 font-bold mb-1">
-                  กรุณาเลือก Fleet
+                <p className="text-lg font-Kanit leading-normal text-slate-600 font-bold mb-1">
+                  กรุณาเลือกกลุ่มยานยนต์
                 </p>
               )}
             </div>
@@ -225,7 +219,7 @@ function Home(): JSX.Element {
 
       <div
         onClick={disablePopupMenu}
-        className="front-idex grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full"
+        className="front-idex grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full pb-10"
       >
         {!searchString && vehicles
           ? vehicles.map((item: IVehicle, i: number) => (
@@ -244,7 +238,7 @@ function Home(): JSX.Element {
           onClick={() => handleShowModal()}
           className="w-full h-full flex justify-center items-center"
         >
-          <MdGpsFixed className="w-10 h-10 text-white" />
+          <GiCarWheel className="w-10 h-10 text-white" />
         </button>
       </div>
 
