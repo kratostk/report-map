@@ -35,9 +35,6 @@ function Header({
   const [filterFleets, setFilterFleets] = useState<IFleet[] | null>(null);
   const [selectFleetName, setSelectFleetName] = useState<string | null>(null);
 
-  function navigateToHome() {
-    navigate("/");
-  }
   const handleLogout = (): void => {
     loggedOut();
     navigate("/login");
@@ -67,12 +64,7 @@ function Header({
 
   return (
     <header className="backdropBlur dark:darkBackdropBlur shadow-md border-slate-900/10 flex items-center z-10 top-0 fixed justify-between w-full h-16 lg:fixed lg:w-full lg:top-0 lg:left-0 lg:z-30 px-5">
-      <img
-        onClick={navigateToHome}
-        className="my-auto z-100 cursor-pointer"
-        src={logo}
-        width="120"
-      />
+      <img className="my-auto z-100" src={logo} width="120" />
 
       <div className="flex items-center justify-center z-100">
         {/**************************************************/}
@@ -118,7 +110,7 @@ function Header({
         <div
           className={`${
             !showFleets ? "hidden" : "block"
-          } absolute z-100 top-full mx-auto lg:right-20 bg-slate-300 rounded-lg max-h-96 minWidth max-w-full SearchFilter overflow-y-auto overflow-x-hidden`}
+          } absolute z-10 top-full mx-auto lg:right-20 bg-slate-300 rounded-lg max-h-96 minWidth max-w-full SearchFilter overflow-y-auto overflow-x-hidden`}
         >
           <ul className="minWidthFleetList border dark:border-0 overflow-hidden">
             {fleetData && !searchString ? (
