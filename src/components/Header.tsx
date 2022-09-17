@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import logo from "../Image/logo.png";
-import { IFleet } from "../views/Home";
+import { Fleet } from "../views/Home";
 import { StoreContext } from "../storeContext";
 import { useNavigate } from "react-router-dom";
 import { ThemeContext } from "../themeContext";
@@ -10,7 +10,7 @@ import { MemoizedFleets } from "./Fleets";
 interface Props {
   selectFleet: string;
   handleselectFleet: React.MouseEventHandler<HTMLLIElement>;
-  fleetData: IFleet[] | undefined;
+  fleetData: Fleet[] | undefined;
   showUserMenu: boolean;
   setShowModal: () => void;
   setShowUserMenu: () => void;
@@ -32,7 +32,7 @@ function Header({
   const { user } = useContext(StoreContext);
   const { setTheme, theme } = useContext(ThemeContext);
   const [searchString, setSearchString] = useState<string | null>(null);
-  const [filterFleets, setFilterFleets] = useState<IFleet[] | null>(null);
+  const [filterFleets, setFilterFleets] = useState<Fleet[] | null>(null);
   const [selectFleetName, setSelectFleetName] = useState<string | null>(null);
 
   const handleLogout = (): void => {
@@ -44,7 +44,7 @@ function Header({
       return;
     }
     if (searchString) {
-      let filted = fleetData?.filter((item: IFleet) => {
+      let filted = fleetData?.filter((item: Fleet) => {
         return item.fleet_desc.match(searchString);
       });
       setFilterFleets(filted);
@@ -116,7 +116,7 @@ function Header({
             {fleetData && !searchString ? (
               <MemoizedFleets handleselectFleet={handleselectFleet} />
             ) : (
-              filterFleets?.map((item: IFleet) => (
+              filterFleets?.map((item: Fleet) => (
                 <li
                   onClick={handleselectFleet}
                   className="p-5 cursor-pointer hover:bg-slate-500"

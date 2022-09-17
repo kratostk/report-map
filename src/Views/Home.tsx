@@ -1,18 +1,18 @@
-import React, { useState, useContext, Fragment, useRef } from "react";
+import React, { useState, useContext } from "react";
 import Header from "../components/Header";
 import useSWR from "swr";
-import axios, { AxiosRequestConfig } from "axios";
 import { StoreContext } from "../storeContext";
 import Vehicle from "../components/Vehicle";
 import { GiCarWheel } from "react-icons/gi";
 import SelectFleetSM from "../components/SelectFleetSM";
 import Banner from "../components/Banner";
+import fetcher from "../utils/fetcher";
 
-export interface IFleet {
+export type Fleet = {
   fleet_id: string;
   fleet_desc: string;
-}
-export interface IVehicle {
+};
+export type Vehicle = {
   fleet_id: number;
   veh_id: number;
   registration: string;
@@ -27,37 +27,31 @@ export interface IVehicle {
   Status: string;
   Temp1: string;
   Temp2: string;
-}
-
-/******************************************************************/
-/*                            API CALLER                          */
-/**************************************************************** */
-const fetcher = async (url: string, config: AxiosRequestConfig) => {
-  try {
-    const r = await axios.get(url, config);
-    return r.data;
-  } catch (error) {
-    return error;
-  }
 };
 
 function Home(): JSX.Element {
   const { user, fetchFleets } = useContext(StoreContext);
+
+  const [nullSafetyFleets, setNullSafetyFleets] = useState<
+    Array<Fleet> | undefined
+  >();
+
   const [selectFleet, setSelectFleet] = useState<string>("0");
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const [showUserMenu, setShowUserMenu] = useState<boolean>(false); // logged in user menu panel
   const [searchString, setSearchString] = useState<string | null>(null);
-  const [filterData, setFilterData] = useState<IVehicle[] | null>(null);
+  const [filterData, setFilterData] = useState<Vehicle[] | null>(null);
   const [showFleets, setShowFleets] = useState<boolean>(false);
   const [open, setOpen] = useState(false);
 
-  const openFleetsSearchFilterPanel = () => {
+  function toggleSearchByFleet() {
     setShowFleets(true);
-  };
+  }
 
-  const handleSetShowUserMenu = (): void => {
+  function toggleProfileMenu() {
     setShowUserMenu(!showUserMenu);
-  };
+  }
+
   const disablePopupMenu = (): void => {
     setShowMenu(false);
     setShowUserMenu(false);
@@ -77,12 +71,12 @@ function Home(): JSX.Element {
     setSearchString(e.target.value);
   };
 
-  const search = (data: IVehicle[], filterStr: string | null): void => {
+  const search = (data: Vehicle[], filterStr: string | null): void => {
     if (!data) {
       return;
     }
     if (filterStr) {
-      let filterd = data.filter((item: IVehicle) => {
+      let filterd = data.filter((item: Vehicle) => {
         return item.registration.match(filterStr);
       });
       setFilterData(filterd);
@@ -103,7 +97,7 @@ function Home(): JSX.Element {
    */
   const { data: fleets, error: fetchFleetError } = useSWR(
     [
-      `https://geotrackerbackend2.kratostracking.com:5001/api/fleets/${
+      `https://geotrackerbackend.kratostracking.com:5000/api/fleets/${
         user!.username
       }`,
       config,
@@ -116,7 +110,7 @@ function Home(): JSX.Element {
    */
   const { data: vehicles, error: fetchVehicleError } = useSWR(
     [
-      `https://geotrackerbackend2.kratostracking.com:5001/api/fleet/vehicles/${selectFleet}`,
+      `https://geotrackerbackend.kratostracking.com:5000/api/fleet/vehicles/${selectFleet}`,
       config,
     ],
     fetcher,
@@ -152,9 +146,18 @@ function Home(): JSX.Element {
     if (!fleets) {
       return;
     } else {
-      setSelectFleet(fleets[0].fleet_id);
-      // UPDATE FLEET CONTEXT
-      fetchFleets(fleets);
+      //* In some case fleetID == null
+      let nullSafeFleetArr = fleets.filter(
+        (item: Fleet) => item.fleet_id !== null
+      );
+
+      setNullSafetyFleets(nullSafeFleetArr);
+
+      //* Set first fleet to be fetched initially.
+      setSelectFleet(nullSafeFleetArr[0].fleet_id);
+
+      //* update global state context
+      fetchFleets(nullSafeFleetArr);
     }
   }, [fleets]);
 
@@ -165,10 +168,10 @@ function Home(): JSX.Element {
         handleselectFleet={handleselectFleet}
         fleetData={fleets}
         showUserMenu={showUserMenu}
-        setShowUserMenu={handleSetShowUserMenu}
+        setShowUserMenu={toggleProfileMenu}
         setShowModal={handleShowModal}
         showFleets={showFleets}
-        handleShowFleets={openFleetsSearchFilterPanel}
+        handleShowFleets={toggleSearchByFleet}
       />
 
       {/****************************************/
@@ -211,29 +214,29 @@ function Home(): JSX.Element {
             </div>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <div
+          onClick={disablePopupMenu}
+          className="front-idex grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full pb-10"
+        >
+          {!searchString && vehicles
+            ? vehicles.map((item: Vehicle, i: number) => (
+                <Vehicle vehicle={item} key={i} />
+              ))
+            : filterData?.map((item: Vehicle, i: number) => (
+                <Vehicle vehicle={item} key={i} />
+              ))}
+        </div>
+      )}
 
       {/*************************************************/
       /*                 RENDER VEHICLE DATA            */
       /**************************************************/}
 
-      <div
-        onClick={disablePopupMenu}
-        className="front-idex grid grid-cols-1 px-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 w-full pb-10"
-      >
-        {!searchString && vehicles
-          ? vehicles.map((item: IVehicle, i: number) => (
-              <Vehicle vehicle={item} key={i} />
-            ))
-          : filterData?.map((item: IVehicle, i: number) => (
-              <Vehicle vehicle={item} key={i} />
-            ))}
-      </div>
-
       {/******************************************************************************/
       /*                FIXED OPEN SEARCH FILTER FORM FOR MOBILE ICON                */
       /******************************************************************************/}
-      <div className="md:hidden shadow-lg fixed bottom-10 right-10 bg-sky-500 rounded-full w-16 h-16 ">
+      <div className="md:hidden shadow-lg fixed bottom-10 right-10 bg-sky-700 rounded-full w-16 h-16 ">
         <button
           onClick={() => handleShowModal()}
           className="w-full h-full flex justify-center items-center"
@@ -246,7 +249,7 @@ function Home(): JSX.Element {
       {/*             SEARCH FILTER FORM FOR MOBILE SCREEN              */}
       {/*****************************************************************/}
       <SelectFleetSM
-        fleets={fleets}
+        fleets={nullSafetyFleets}
         handleSelectFleetOnMobile={handleSelectFleetOnMobile}
         isMobileFleetModalOpen={open}
         setMobileFleetModal={handleSetMobileFleetModal}

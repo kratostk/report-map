@@ -1,6 +1,6 @@
-import { IFleet } from "./../views/Home";
+import { Fleet } from "./../views/Home";
 
-const searchFilter = <T extends IFleet>(
+const searchFilter = <T extends Fleet>(
   data: T[] | undefined,
   filterStr: string
 ): T[] => {

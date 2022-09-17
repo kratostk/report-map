@@ -1,5 +1,5 @@
 import React from "react";
-import { IVehicle, IFleet } from "../views/Home";
+import { Vehicle, Fleet } from "../views/Home";
 import { AiFillCar } from "react-icons/ai";
 import { FaCarSide } from "react-icons/fa";
 import { IoMdFlashOff } from "react-icons/io";
@@ -8,8 +8,8 @@ import { GiRaceCar } from "react-icons/gi";
 import { RiCarWashingFill } from "react-icons/ri";
 
 interface Props {
-  vehicles: IVehicle[];
-  fleets: IFleet[];
+  vehicles: Vehicle[];
+  fleets: Fleet[];
   selectedFleet: string;
   handleVehicleSearchFilter: React.ChangeEventHandler<HTMLInputElement>;
   closeFleetSearchFilterPanel: () => void;
@@ -23,9 +23,7 @@ const Banner = ({
   closeFleetSearchFilterPanel,
 }: Props): JSX.Element => {
   const getFleetName = (): string => {
-    const res = fleets.filter(
-      (item: IFleet) => item.fleet_id === selectedFleet
-    );
+    const res = fleets.filter((item: Fleet) => item.fleet_id === selectedFleet);
     return res[0].fleet_desc;
   };
 
@@ -75,7 +73,7 @@ const Banner = ({
               <FaCarSide className="mr-1 text-slate-700 dark:text-white" />
               ปกติ:{" "}
               {
-                vehicles.filter((item: IVehicle) => item.Status === "NORMAL")
+                vehicles.filter((item: Vehicle) => item.Status === "NORMAL")
                   .length
               }
             </li>
@@ -83,9 +81,8 @@ const Banner = ({
               <TbCarOff className="mr-1 text-slate-700 dark:text-white" />
               ดับเครื่องยนต์:{" "}
               {
-                vehicles.filter(
-                  (item: IVehicle) => item.Status === "ENGINE OFF"
-                ).length
+                vehicles.filter((item: Vehicle) => item.Status === "ENGINE OFF")
+                  .length
               }
             </li>
             <li className="flex flex-row justify-center items-center text-sm   text-slate-800 dark:text-white dark:highlight-white/20 p-2 rounded-full ">
@@ -93,7 +90,7 @@ const Banner = ({
               ไม่มีสัญญาณ:{" "}
               {
                 vehicles.filter(
-                  (item: IVehicle) => item.Status === "NO SIGNAL 24Hr."
+                  (item: Vehicle) => item.Status === "NO SIGNAL 24Hr."
                 ).length
               }
             </li>
@@ -101,7 +98,7 @@ const Banner = ({
               <RiCarWashingFill className="mr-1 text-slate-700 dark:text-white" />
               จอดติดเครื่องยนต์:{" "}
               {
-                vehicles.filter((item: IVehicle) => item.Status === "IDEL")
+                vehicles.filter((item: Vehicle) => item.Status === "IDEL")
                   .length
               }
             </li>
@@ -109,7 +106,7 @@ const Banner = ({
               <GiRaceCar className="m-1 text-2xl text-slate-700 dark:text-white" />
               ความเร็วเกินกำหนด:{" "}
               {
-                vehicles.filter((item: IVehicle) => item.Status === "SPEEDING")
+                vehicles.filter((item: Vehicle) => item.Status === "SPEEDING")
                   .length
               }
             </li>

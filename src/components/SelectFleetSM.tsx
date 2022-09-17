@@ -1,12 +1,12 @@
 import { Fragment, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { IFleet } from "../views/Home";
+import { Fleet } from "../views/Home";
 import { searchFilter } from "../utils/searchFilter";
 
 interface Props {
   isMobileFleetModalOpen: boolean;
   setMobileFleetModal: (v: boolean) => void;
-  fleets: IFleet[] | undefined;
+  fleets: Fleet[] | undefined;
   handleSelectFleetOnMobile: React.MouseEventHandler<HTMLLIElement>;
 }
 
@@ -109,7 +109,7 @@ const SelectFleetSM = ({
                   <div className="w-full smFleetsBox">
                     <ul className="mt-4">
                       {fleets && !searchString
-                        ? fleets.map((item: IFleet) => (
+                        ? fleets.map((item: Fleet) => (
                             <li
                               onClick={handleSelectFleetOnMobile}
                               className="dark:text-white py-4 px-6 dark:hover:bg-slate-800/50 hover:bg-gray-100 cursor-pointer"
@@ -120,7 +120,7 @@ const SelectFleetSM = ({
                             </li>
                           ))
                         : searchFilter(fleets, searchString!).map(
-                            (item: IFleet) => (
+                            (item: Fleet) => (
                               <li
                                 onClick={handleSelectFleetOnMobile}
                                 className="dark:text-white py-4 px-6 dark:hover:bg-slate-800/50 hover:bg-gray-100 cursor-pointer"
